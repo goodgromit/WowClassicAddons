@@ -1,0 +1,6 @@
+[submodule "autoswitchrep_classic"]
+	path = autoswitchrep_classic
+	url = https://github.com/goodgromit/autoswitchrep_classic.git
+[submodule "diminfo"]
+	path = diminfo
+	url = https://github.com/goodgromit/diminfo.git
