@@ -1,0 +1,7 @@
+## Interface: 20505
+## Title: VendorPriceTip
+## Notes: Shows vendor sell price of items in the tooltip.
+## Author: Gyroglle-Netherwing
+## Version: 1.1.2
+
+VendorPriceTip.lua
