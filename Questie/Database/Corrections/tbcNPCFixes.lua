@@ -45,6 +45,7 @@ function QuestieTBCNpcFixes:Load()
         },
         [2038] = { -- Lord Melenas
             [npcKeys.spawns] = {[zoneIDs.TELDRASSIL] = {{51.23,50.8},{51.31,50.19},{52.82,50.21}}},
+            [npcKeys.waypoints] = {},
         },
         [2385] = {
             [npcKeys.spawns] = {[zoneIDs.HILLSBRAD_FOOTHILLS] = {{63.59,67.96},{58.52,55.59},{60.98,50.92},{70.35,67.98},{61.14,66.86},{57.56,49.97},{66.26,74.09},{60.16,58.47},{56.7,60.08},{58.98,56.53},{57.68,59.31},{67.97,80.87},{61.79,69.02},{66.33,75.32},{64.98,66.4},{64.87,69.26},{65.09,72.99},{62.62,71.43}}},
@@ -109,7 +110,7 @@ function QuestieTBCNpcFixes:Load()
             [npcKeys.questEnds] = {64046,64048,64050,64052},
         },
         [3407] = { -- Sian'dur
-            [npcKeys.questStarts] = {6068,9617},
+            [npcKeys.questStarts] = {6066,6068,9617},
         },
         [3516] = { -- Arch Druid Fandral Staghelm
             [npcKeys.questStarts] = {952,3764,3781,6761},
@@ -176,9 +177,6 @@ function QuestieTBCNpcFixes:Load()
             [npcKeys.questStarts] = {3790,8353,63448,63767,65284,65561,93823},
             [npcKeys.questEnds] = {8353,63448,63767,65284,65561,93823},
         },
-        [5113] = { -- Kelv Sternhammer
-            [npcKeys.questStarts] = {1718,8417},
-        },
         [5149] = { -- Brandur Ironhammer
             [npcKeys.questStarts] = {2999,3681,7670,8415},
         },
@@ -190,6 +188,9 @@ function QuestieTBCNpcFixes:Load()
         },
         [5167] = { -- Fenthwick
             [npcKeys.questStarts] = {6681},
+        },
+        [5480] = { -- Ilsa Corbin
+            [npcKeys.questStarts] = {1638},
         },
         [5495] = { -- Ursula Deline
             [npcKeys.questStarts] = {64031,64034,64035,64037,64038},
@@ -235,7 +236,7 @@ function QuestieTBCNpcFixes:Load()
             [npcKeys.questStarts] = {64048,64050,64052,64063,64064},
             [npcKeys.questEnds] = {64046,64048,64050,64052},
         },
-        [6018] = { -- Ur\'kyo
+        [6018] = { -- Ur'kyo
             [npcKeys.questEnds] = {5642,5643,5680,5652,5654,5656,5657},
         },
         [6072] = {
@@ -244,7 +245,7 @@ function QuestieTBCNpcFixes:Load()
         [6166] = { -- Yorus Barleybrew
             [npcKeys.questEnds] = {1698,1699,10371},
         },
-        [6176] = { -- Bath\'rah the Windwatcher
+        [6176] = { -- Bath'rah the Windwatcher
             [npcKeys.questStarts] = {1712,1713,1792,8411,8412,8413},
             [npcKeys.questEnds] = {1712,1713,1791,1792,8410,8411,8412,8413},
         },
@@ -278,6 +279,9 @@ function QuestieTBCNpcFixes:Load()
             [npcKeys.questStarts] = {936,5927,6385,8359,63448,63767,65284,65561,93823},
             [npcKeys.questEnds] = {6384,8359,63448,63767,65284,65561,93823},
         },
+        [7009] = { -- Arantir
+            [npcKeys.questStarts] = {2358},
+        },
         [7315] = { -- Darnath Bladesinger
             [npcKeys.questStarts] = {1698,8417},
         },
@@ -300,6 +304,7 @@ function QuestieTBCNpcFixes:Load()
         },
         [10540] = { -- Vol'jin
             [npcKeys.questStarts] = {1361},
+            [npcKeys.waypoints] = {},
         },
         [10837] = { -- High Executor Derrington
             [npcKeys.questEnds] = {105,5093,5094,5095,5096,5098,5238,5511,10374},
@@ -631,6 +636,9 @@ function QuestieTBCNpcFixes:Load()
             [npcKeys.spawns] = {[zoneIDs.AZUREMYST_ISLE]={{11.36,82.34}}},
             [npcKeys.zoneID] = zoneIDs.AZUREMYST_ISLE,
         },
+        [17212] = { -- Tuluun
+            [npcKeys.questStarts] = {9461,9464,9500},
+        },
         [17214] = {
             [npcKeys.waypoints] = {},
         },
@@ -638,7 +646,7 @@ function QuestieTBCNpcFixes:Load()
             [npcKeys.waypoints] = {},
         },
         [17219] = { -- Sulaa
-            [npcKeys.questStarts] = {9462,9500,9551},
+            [npcKeys.questStarts] = {9462,9502,9551},
         },
         [17240] = {
             [npcKeys.waypoints] = {},
@@ -676,6 +684,9 @@ function QuestieTBCNpcFixes:Load()
         },
         [17318] = {
             [npcKeys.spawns] = {[zoneIDs.AZUREMYST_ISLE] = {{18.48,84.35}}},
+        },
+        [17348] = { -- Elder Brown Bear
+            [npcKeys.spawns] = {[zoneIDs.BLOODMYST_ISLE] = {{49.18,21.28},{49.17,24.86},{47.41,23.27},{42.06,25.67},{36.78,31.99},{43.09,27.37},{44.23,28.8},{46.93,33.32},{45.09,37.22},{37.77,43.63},{34.97,42.88},{31.78,44.42},{33.83,49.44},{35.04,45.77},{35.77,50.71},{38.4,49.44},{41.84,48.53},{42.46,41.46},{43.61,58.74},{40.72,56.17},{40.12,53.88},{35.02,54.81}}},
         },
         [17350] = {
             [npcKeys.spawns] = {[zoneIDs.BLOODMYST_ISLE]={{43.74,24.11},{40.46,26.0},{47.68,32.78},{48.1,31.75},{35.84,43.61},{34.28,44.08},{31.29,42.66},{36.9,49.07},{36.72,50.54},{39.66,51.11},{43.58,51.24},{45.15,57.08},{42.6,58.1},{39.37,55.07},{43.64,62.19},{39.6,41.7},{43.7,39.3},{44.8,39.9}}},
@@ -770,12 +781,18 @@ function QuestieTBCNpcFixes:Load()
         [17589] = {
             [npcKeys.waypoints] = {},
         },
+        [17591] = { -- Blood Elf Bandit
+            [npcKeys.spawns] = {[zoneIDs.AZUREMYST_ISLE]={{26.21,67.0},{28.45,78.55},{36.27,60.96},{53.17,61.63},{65.1,39.27},{53.88,40.83},{54.39,21.66},{59.13,18.55},{34.1,18.78},{33.82,26.22},{36.7,32.66},{36.83,20.96},{51.78,17.52},{50.49,29.18},{46.49,39.52},{43.08,63.46},{35.27,64.86},{33.92,70.78},{32.31,62.66},{27.6,52.19}}},
+        },
         [17592] = {
             [npcKeys.spawns] = {[zoneIDs.BLOODMYST_ISLE]={{72.81,20.83}}},
             [npcKeys.waypoints] = {},
         },
         [17612] = {
             [npcKeys.spawns] = {[zoneIDs.AZUREMYST_ISLE] = {{31.8,25.4},{34.0,25.4},{34.4,22.8},{34.0,20.8},{34.6,17.6},{34.2,14.6},{35.2,12.6},{35.6,11.6}}},
+        },
+        [17663] = { -- Maatparm
+            [npcKeys.name] = "Maatparm",
         },
         [17767] = {
             [npcKeys.spawns] = {[zoneIDs.HYJAL_SUMMIT] = {{-1,-1}}},
@@ -828,6 +845,9 @@ function QuestieTBCNpcFixes:Load()
             [npcKeys.zoneID] = zoneIDs.THE_BOTANICA,
         },
         [18020] = { -- Defender Adrielle
+            [npcKeys.questStarts] = {10066,10067},
+        },
+        [18024] = { -- Defender Sorli
             [npcKeys.questStarts] = {10066,10067},
         },
         [18096] = {
@@ -1370,6 +1390,9 @@ function QuestieTBCNpcFixes:Load()
         [23100] = {
             [npcKeys.spawns] = {[zoneIDs.TEROKKAR_FOREST] = {{44.2,41.0},},},
         },
+        [23127] = { -- Farseer Javad
+            [npcKeys.questStarts] = {8410,9547},
+        },
         [23161] = {
             [npcKeys.spawns] = {[zoneIDs.TEROKKAR_FOREST]={{70.23,83.35},{70.06,79.45},{73.5,80.7},{69.67,74.72},{75.24,81.2},{72.23,88.18},{74.79,87.51},{61.99,74.66},{61.38,78.07}}},
             [npcKeys.zoneID] = zoneIDs.TEROKKAR_FOREST,
@@ -1636,6 +1659,9 @@ function QuestieTBCNpcFixes:Load()
             },
             [npcKeys.questStarts] = {11886,11954,11955},
             [npcKeys.questEnds] = {11917,11947,11948,11952,11953,11954,12012},
+        },
+        [26309] = { -- Weapons Vendor
+            [npcKeys.spawns] = {},
         },
         [26760] = {
             [npcKeys.npcFlags] = npcFlags.NONE,

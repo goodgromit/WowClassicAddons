@@ -1,0 +1,10 @@
+## Interface: 11508
+## Title: Simple Dungeon Maps
+## Notes: A simple dungeon map viewer for Classic and TBC dungeons
+## Author: Custom
+## Version: 1.0
+## SavedVariables: SimpleDungeonMapsDB
+
+Locales.lua
+Data.lua
+Core.lua

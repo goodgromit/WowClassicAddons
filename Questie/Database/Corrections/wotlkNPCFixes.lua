@@ -398,19 +398,13 @@ function QuestieWotlkNpcFixes:Load()
             [npcKeys.questEnds] = {10960,64139,64140,64141,64142,64143,64144,64145},
         },
         [17219] = { -- Sulaa
-            [npcKeys.questStarts] = {9462,9500,9551,14111},
-        },
-        [17663] = {
-            [npcKeys.name] = "Maatparm",
+            [npcKeys.questStarts] = {9462,9502,9551,14111},
         },
         [17718] = {
             [npcKeys.questStarts] = {9684,9681},
         },
         [17977] = {
             [npcKeys.spawns] = {[zoneIDs.THE_BOTANICA]={{-1,-1}}},
-        },
-        [18024] = { -- Defender Sorli
-            [npcKeys.questStarts] = {},
         },
         [18481] = { -- A'dal
             [npcKeys.questEnds] = {10102,10210,10280,10560,10704,10708,10781,10882,10883,10884,10885,10886,10948,11007,11052,13081,13430},

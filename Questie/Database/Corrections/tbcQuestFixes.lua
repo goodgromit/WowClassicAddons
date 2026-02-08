@@ -41,11 +41,11 @@ function QuestieTBCQuestFixes:Load()
         [77] = {
             [questKeys.requiredRaces] = raceIDs.ALL_HORDE,
         },
-        [81] = {
-            [questKeys.requiredRaces] = raceIDs.ALL_HORDE,
-        },
         [100] = {
             [questKeys.childQuests] = {},
+        },
+        [123] = { -- The Collector
+            [questKeys.nextQuestInChain] = 147,
         },
         [171] = {
             [questKeys.questLevel] = -1,
@@ -55,6 +55,9 @@ function QuestieTBCQuestFixes:Load()
         },
         [201] = {
             [questKeys.triggerEnd] = {"Locate the hunters' camp", {[zoneIDs.STRANGLETHORN_VALE]={{35.73,10.82}}}},
+        },
+        [233] = {
+            [questKeys.preQuestSingle] = {179},
         },
         [225] = {
             [questKeys.requiredLevel] = 25,
@@ -67,6 +70,9 @@ function QuestieTBCQuestFixes:Load()
         },
         [287] = {
             [questKeys.triggerEnd] = {"Fully explore Frostmane Hold", {[zoneIDs.DUN_MOROGH]={{21.47,52.2}}}},
+        },
+        [310] = { -- Bitter Rivals
+            [questKeys.childQuests] = {308},
         },
         [349] = {
             [questKeys.objectivesText] = {"Speak with Witch Doctor Unbagwa.",},
@@ -108,9 +114,6 @@ function QuestieTBCQuestFixes:Load()
             [questKeys.requiredLevel] = 15,
         },
         [748] = {
-            [questKeys.requiredRaces] = raceIDs.TAUREN,
-        },
-        [751] = {
             [questKeys.requiredRaces] = raceIDs.TAUREN,
         },
         [756] = {
@@ -181,6 +184,15 @@ function QuestieTBCQuestFixes:Load()
         [1049] = { -- Not available to UNDEAD
             [questKeys.requiredRaces] = raceIDs.ORC + raceIDs.TAUREN + raceIDs.TROLL + raceIDs.BLOOD_ELF,
         },
+        [1090] = { -- Gerenzo's Orders
+            [questKeys.requiredRaces] = raceIDs.NONE,
+        },
+        [1092] = { -- Gerenzo's Orders
+            [questKeys.requiredRaces] = raceIDs.NONE,
+        },
+        [1093] = { -- Super Reaper 6000
+            [questKeys.requiredRaces] = raceIDs.NONE,
+        },
         [1103] = {
             [questKeys.preQuestSingle] = {100},
             [questKeys.parentQuest] = 0,
@@ -232,19 +244,76 @@ function QuestieTBCQuestFixes:Load()
         [1558] = {
             [questKeys.questLevel] = -1,
         },
+        [1638] = { -- A Warrior's Training
+            [questKeys.startedBy] = {{913,5480}},
+            [questKeys.exclusiveTo] = {
+                1678,1683, -- not available once you turn in these main quests
+                1639, -- "follow up" quest from same NPC. NOT breadcrumb
+                9582, -- not available once you pick this draenei main quest -- TBC+
+            },
+        },
+        [1639] = { -- Bartleby the Drunk
+            [questKeys.exclusiveTo] = {1678,1683,9582},
+        },
+        [1640] = { -- Beat Bartleby
+            [questKeys.preQuestSingle] = {1639,1678,1683,9582},
+        },
+        [1678] = { -- Vejrek
+            [questKeys.exclusiveTo] = {1639,1683,9582},
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE, -- TBC+
+        },
+        [1679] = { -- Muren Stormpike
+            [questKeys.exclusiveTo] = {
+                1639,1683, -- not available once you turn in these main quests
+                9582, -- not available once you pick this draenei main quest -- TBC+
+            },
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE, -- TBC+
+        },
+        [1680] = { -- Tormus Deepforge
+            [questKeys.preQuestSingle] = {1683,1678,1639,9582},
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE, -- TBC+
+        },
+        [1681] = { -- Ironband's Compound
+            [questKeys.preQuestSingle] = {1683,1678,1639,9582},
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE, -- TBC+
+        },
+        [1682] = { -- Grey Iron Weapons
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE, -- TBC+
+        },
+        [1683] = { -- Vorlus Vilehoof
+            [questKeys.exclusiveTo] = {1639,1678,9582},
+        },
+        [1684] = { -- Elanaria
+            [questKeys.exclusiveTo] = {
+                1639,1678, -- not available once you pick these main quests
+                1683, -- "follow up" quest from same NPC. NOT breadcrumb
+                9582, -- not available once you pick this draenei main quest
+            },
+        },
+        [1686] = { -- The Shade of Elura
+            [questKeys.preQuestSingle] = {1683,1678,1639,9582},
+        },
         [1687] = {
             [questKeys.questLevel] = -1,
         },
-        [1698] = {
-            [questKeys.startedBy] = {{5479,7315}},
+        [1698] = { -- Yorus Barleybrew
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+            [questKeys.exclusiveTo] = {10371},
         },
-        [1699] = {
+        [1699] = { -- The Rethban Gauntlet
             [questKeys.triggerEnd] = {"Enter the Rethban Caverns", {[zoneIDs.REDRIDGE_MOUNTAINS]={{19.22,25.25}}}},
+            [questKeys.breadcrumbs] = {1698,10371},
+        },
+        [1703] = { -- Mathiel
+            [questKeys.requiredRaces] = raceIDs.NIGHT_ELF,
+        },
+        [1704] = { -- Klockmort Spannerspan
+            [questKeys.requiredRaces] = raceIDs.GNOME + raceIDs.DWARF,
         },
         [1719] = {
             [questKeys.triggerEnd] = {"Step on the grate to begin the Affray", {[zoneIDs.THE_BARRENS]={{68.61,48.72}}}},
         },
-        [1782] = {
+        [1782] = { -- Furen's Armor
             [questKeys.zoneOrSort] = sortKeys.WARRIOR,
         },
         [1799] = {
@@ -261,6 +330,9 @@ function QuestieTBCQuestFixes:Load()
         },
         [1805] = {
             [questKeys.requiredRaces] = raceIDs.ORC + raceIDs.UNDEAD + raceIDs.BLOOD_ELF,
+        },
+        [1821] = { -- Agamand Heirlooms
+            [questKeys.nextQuestInChain] = 1822,
         },
         [1858] = {
             [questKeys.requiredRaces] = raceIDs.ORC + raceIDs.TROLL,
@@ -289,6 +361,21 @@ function QuestieTBCQuestFixes:Load()
         [1999] = {
             [questKeys.requiredRaces] = raceIDs.UNDEAD,
         },
+        [2205] = { -- Seek out SI: 7
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+        },
+        [2206] = { -- Snatch and Grab
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+        },
+        [2218] = { -- Road to Salvation
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+        },
+        [2238] = { -- Simple Subterfugin'
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+        },
+        [2239] = { -- Onin's Report
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+        },
         [2240] = {
             [questKeys.triggerEnd] = {"Explore the Hidden Chamber", {[zoneIDs.BADLANDS]={{35.22,10.32}}}},
         },
@@ -297,6 +384,16 @@ function QuestieTBCQuestFixes:Load()
         },
         [2280] = {
             [questKeys.requiredLevel] = 40,
+        },
+        [2298] = { -- Kingly Shakedown
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+        },
+        [2299] = { -- To Hulfdan!
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+        },
+        [2358] = { -- Horns of Nez'ra
+            [questKeys.name] = "Horns of Nez'ra",
+            [questKeys.startedBy] = {{7009}},
         },
         [2381] = {
             [questKeys.requiredRaces] = raceIDs.ALL_HORDE,
@@ -377,9 +474,6 @@ function QuestieTBCQuestFixes:Load()
         [3505] = {
             [questKeys.triggerEnd] = {"Find Magus Rimtori's camp", {[zoneIDs.AZSHARA]={{59.29,31.21}}}},
         },
-        [3506] = {
-            [questKeys.requiredRaces] = raceIDs.ALL_HORDE,
-        },
         [3631] = {
             [questKeys.startedBy] = {{3326}},
             [questKeys.finishedBy] = {{6251}},
@@ -419,6 +513,7 @@ function QuestieTBCQuestFixes:Load()
             [questKeys.requiredRaces] = raceIDs.NONE,
         },
         [4740] = {
+            [questKeys.requiredLevel] = 9,
             [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
         },
         [4813] = {
@@ -436,6 +531,15 @@ function QuestieTBCQuestFixes:Load()
         },
         [5002] = {
             [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+        },
+        [5054] = { -- Ursius of the Shardtooth
+            [questKeys.requiredRaces] = raceIDs.NONE,
+        },
+        [5055] = { -- Brumeran of the Chillwind
+            [questKeys.requiredRaces] = raceIDs.NONE,
+        },
+        [5056] = { -- Shy-Rotam
+            [questKeys.requiredRaces] = raceIDs.NONE,
         },
         [5168] = {
             [questKeys.preQuestSingle] = {5210},
@@ -486,6 +590,9 @@ function QuestieTBCQuestFixes:Load()
         },
         [6761] = {
             [questKeys.preQuestSingle] = {1015,1019,1047},
+        },
+        [6983] = { -- You're a Mean One...
+            [questKeys.requiredRaces] = raceIDs.ALL_HORDE,
         },
         [7484] = {
             [questKeys.specialFlags] = specialFlags.REPEATABLE,
@@ -567,6 +674,9 @@ function QuestieTBCQuestFixes:Load()
         },
         [8122] = {
             [questKeys.triggerEnd] = {"Hold Five Bases in Arathi Basin", {[zoneIDs.ARATHI_HIGHLANDS]={{73.2,30}}}},
+        },
+        [8249] = { -- Junkboxes Needed
+            [questKeys.specialFlags] = specialFlags.REPEATABLE,
         },
         [8259] = {
             [questKeys.requiredRaces] = raceIDs.ALL_HORDE,
@@ -1342,7 +1452,7 @@ function QuestieTBCQuestFixes:Load()
             [questKeys.objectives] = {{{17226,"Carinda's Scroll of Retribution used",Questie.ICON_TYPE_INTERACT}}},
         },
         [9484] = {
-            [questKeys.breadcrumbs] = {9617,10530}, -- check if 10529 need to be added
+            [questKeys.breadcrumbs] = {9617,10530},
             [questKeys.objectives] = {{{15650,nil,Questie.ICON_TYPE_INTERACT}}},
         },
         [9485] = {
@@ -1360,8 +1470,21 @@ function QuestieTBCQuestFixes:Load()
         [9491] = {
             [questKeys.preQuestSingle] = {},
         },
-        [9494] = {
+        [9492] = { -- Turning the Tide
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
+        },
+        [9493] = { -- Pride of the Fel Horde
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
+        },
+        [9494] = { -- Fel Embers
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
             [questKeys.extraObjectives] = {{nil, Questie.ICON_TYPE_OBJECT, l10n("Gather a Fel Ember using Grand Warlock's Amulet"), 0, {{"object", 181679}}}},
+        },
+        [9495] = { -- The Will of the Warchief
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
+        },
+        [9496] = { -- Pride of the Fel Horde
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
         },
         [9498] = {
             [questKeys.preQuestSingle] = {10123},
@@ -1371,16 +1494,20 @@ function QuestieTBCQuestFixes:Load()
             [questKeys.preQuestSingle] = {10123},
             [questKeys.requiredRaces] = raceIDs.BLOOD_ELF,
         },
-        [9500] = {
+        [9500] = { -- Call of Water
+            [questKeys.startedBy] = {{17212}},
             [questKeys.questLevel] = -1,
         },
-        [9501] = {
+        [9501] = { -- Call of Water
             [questKeys.questLevel] = -1,
         },
-        [9503] = {
+        [9502] = { -- Call of Water
+            [questKeys.startedBy] = {{17219}},
+        },
+        [9503] = { -- Call of Water
             [questKeys.questLevel] = -1,
         },
-        [9504] = {
+        [9504] = { -- Call of Water
             [questKeys.questLevel] = -1,
         },
         [9505] = { -- The Prophecy of Velen
@@ -1389,11 +1516,11 @@ function QuestieTBCQuestFixes:Load()
         [9506] = { -- A Small Start
             [questKeys.breadcrumbs] = {9505},
         },
-        [9508] = {
+        [9508] = { -- Call of Water
             [questKeys.questLevel] = -1,
             [questKeys.extraObjectives] = {{nil, Questie.ICON_TYPE_OBJECT, l10n("Destroy the barrel using the Skin of Purest Water"), 0, {{"object", 181699}}}},
         },
-        [9509] = {
+        [9509] = { -- Call of Water
             [questKeys.questLevel] = -1,
         },
         [9514] = {
@@ -1402,6 +1529,12 @@ function QuestieTBCQuestFixes:Load()
         },
         [9523] = {
             [questKeys.preQuestSingle] = {9506,9512},
+        },
+        [9524] = { -- Imprisoned in the Citadel
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
+        },
+        [9525] = { -- Imprisoned in the Citadel
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
         },
         [9527] = { -- All That Remains
             [questKeys.preQuestSingle] = {},
@@ -1427,8 +1560,9 @@ function QuestieTBCQuestFixes:Load()
         [9545] = {
             [questKeys.objectives] = {{{16852,"Vision Granted"}},nil,nil,nil},
         },
-        [9549] = {
+        [9549] = { -- Artifacts of the Blacksilt
             [questKeys.preQuestSingle] = {},
+            [questKeys.breadcrumbs] = {10063},
         },
         [9558] = {
             [questKeys.preQuestSingle] = {10143,10483},
@@ -1450,17 +1584,23 @@ function QuestieTBCQuestFixes:Load()
         [9570] = { -- The Kurken is Lurkin'
             [questKeys.preQuestSingle] = {9565,9573},
         },
+        [9572] = { -- Weaken the Ramparts
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
+        },
         [9573] = {
             [questKeys.preQuestSingle] = {9560,9562},
         },
-        [9575] = {
+        [9575] = { -- Weaken the Ramparts
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
             [questKeys.preQuestSingle] = {10143,10483},
         },
         [9576] = {
             [questKeys.startedBy] = {nil,nil,{23870}},
         },
-        [9582] = {
+        [9582] = { -- Strength of One
             [questKeys.requiredSourceItems] = {},
+            [questKeys.exclusiveTo] = {1678,1683,1639},
+            [questKeys.extraObjectives] = {{nil, Questie.ICON_TYPE_OBJECT, l10n("Open the cage"), 0, {{"object", 181849}}}},
         },
         [9587] = {
             [questKeys.startedBy] = {nil,nil,{23890}},
@@ -1468,25 +1608,41 @@ function QuestieTBCQuestFixes:Load()
         [9588] = {
             [questKeys.startedBy] = {nil,nil,{23892}},
         },
+        [9589] = { -- The Blood is Life
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
+        },
+        [9590] = { -- The Blood is Life
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
+        },
         [9591] = {
-            [questKeys.triggerEnd] = {"Tame a Barbed Crawler", {[zoneIDs.AZUREMYST_ISLE]={{20.29,64.87},{22.04,72.29},{20.57,68.9}}}},
+            [questKeys.breadcrumbs] = {9757},
+            [questKeys.objectives] = {{{17217,nil,Questie.ICON_TYPE_INTERACT}}},
         },
         [9592] = {
-            [questKeys.triggerEnd] = {"Tame a Greater Timberstrider", {[zoneIDs.AZUREMYST_ISLE]={{36.46,35.49},{35.16,30.99},{40.27,37.65},{40.25,32.31}}}},
+            [questKeys.objectives] = {{{17374,nil,Questie.ICON_TYPE_INTERACT}}},
         },
         [9593] = {
-            [questKeys.triggerEnd] = {"Tame a Nightstalker", {[zoneIDs.AZUREMYST_ISLE]={{36.41,40.24},{35.82,37.14}}}},
+            [questKeys.objectives] = {{{17203,nil,Questie.ICON_TYPE_INTERACT}}},
         },
         [9594] = {
             [questKeys.startedBy] = {nil,nil,{23900}},
         },
+        [9598] = { -- Redemption
+            [questKeys.breadcrumbs] = {10366},
+        },
+        [9600] = { -- Redemption
+            [questKeys.objectives] = {{{17542,nil,Questie.ICON_TYPE_INTERACT}}},
+        },
         [9601] = {
+            [questKeys.requiredLevel] = 50,
             [questKeys.startedBy] = {{16681,20406},nil,nil},
         },
-        [9607] = {
+        [9607] = { -- Heart of Rage
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
             [questKeys.triggerEnd] = {"Fully Investigate The Blood Furnace", {[zoneIDs.HELLFIRE_PENINSULA]={{45.89,51.93}}}},
         },
-        [9608] = {
+        [9608] = { -- Heart of Rage
+            [questKeys.zoneOrSort] = zoneIDs.HELLFIRE_CITADEL,
             [questKeys.triggerEnd] = {"Fully Investigate The Blood Furnace", {[zoneIDs.HELLFIRE_PENINSULA]={{45.89,51.93}}}},
         },
         [9616] = {
@@ -1539,6 +1695,13 @@ function QuestieTBCQuestFixes:Load()
             [questKeys.triggerEnd] = {"Journal Entry Read", {[3457]={{-1,-1}}}},
             [questKeys.zoneOrSort] = zoneIDs.KARAZHAN,
         },
+        [9648] = { -- Mac'Aree Mushroom Menagerie
+            [questKeys.name] = "Maatparm Mushroom Menagerie",
+            [questKeys.objectivesText] = {"Maatparm at Blood Watch wants 1 Aquatic Stinkhorn, 1 Blood Mushroom, 1 Ruinous Polyspore, and 1 Fel Cone Fungus."},
+        },
+        [9649] = { -- Ysera's Tears
+            [questKeys.objectivesText] = {"Maatparm at Blood Watch wants 2 Ysera's Tears."},
+        },
         [9663] = {
             [questKeys.objectives] = {{{17440,"High Chief Stillpine Warned",Questie.ICON_TYPE_TALK},{17116,"Exarch Menelaous Warned",Questie.ICON_TYPE_TALK},{17240,"Admiral Odesyus Warned",Questie.ICON_TYPE_TALK}}},
         },
@@ -1552,9 +1715,6 @@ function QuestieTBCQuestFixes:Load()
                 {nil,Questie.ICON_TYPE_INTERACT,l10n("Open the cage"),0,{{"object",181928}}},
             },
             [questKeys.objectives] = {{{17682,nil,Questie.ICON_TYPE_EVENT}}},
-        },
-        [9668] = {
-            [questKeys.nextQuestInChain] = 9693,
         },
         [9669] = {
             [questKeys.requiredLevel] = 16,
@@ -1644,13 +1804,13 @@ function QuestieTBCQuestFixes:Load()
         },
         [9753] = {
             [questKeys.preQuestSingle] = {},
-            [questKeys.requiredRaces] = raceIDs.DRAENEI,
         },
         [9756] = {
             [questKeys.objectives] = {{{17824,"Sunhawk Information Recovered",Questie.ICON_TYPE_TALK}}},
         },
         [9757] = {
             [questKeys.requiredRaces] = raceIDs.DRAENEI,
+            [questKeys.breadcrumbForQuestId] = 9591,
         },
         [9759] = {
             [questKeys.preQuestSingle] = {9756},
@@ -1962,13 +2122,14 @@ function QuestieTBCQuestFixes:Load()
             [questKeys.preQuestSingle] = {10143,10483},
         },
         [10063] = {
-            [questKeys.exclusiveTo] = {9549},
+            [questKeys.breadcrumbForQuestId] = 9549,
+            [questKeys.nextQuestInChain] = 9549,
         },
-        [10066] = {
-            [questKeys.startedBy] = {{17986,18020},nil,nil},
+        [10066] = { -- Oh, the Tangled Webs They Weave
+            [questKeys.startedBy] = {{17986,18020,18024}},
         },
-        [10067] = {
-            [questKeys.startedBy] = {{17986,18020},nil,nil},
+        [10067] = { -- Fouled Water Spirits
+            [questKeys.startedBy] = {{17986,18020,18024}},
         },
         [10068] = {
             [questKeys.startedBy] = {{15279},nil,nil},
@@ -2026,6 +2187,21 @@ function QuestieTBCQuestFixes:Load()
         [10085] = {
             [questKeys.objectives] = {{{18840,nil,Questie.ICON_TYPE_EVENT},{18841,nil,Questie.ICON_TYPE_EVENT},{18842,nil,Questie.ICON_TYPE_EVENT},{18843,nil,Questie.ICON_TYPE_EVENT}}},
         },
+        [10091] = { -- The Soul Devices
+            [questKeys.zoneOrSort] = zoneIDs.AUCHINDOUN_DUNGEONS,
+        },
+        [10094] = { -- The Codex of Blood
+            [questKeys.zoneOrSort] = zoneIDs.AUCHINDOUN_DUNGEONS,
+        },
+        [10095] = { -- Into the Heart of the Labyrinth
+            [questKeys.zoneOrSort] = zoneIDs.AUCHINDOUN_DUNGEONS,
+        },
+        [10097] = { -- Brother Against Brother
+            [questKeys.zoneOrSort] = zoneIDs.AUCHINDOUN_DUNGEONS,
+        },
+        [10098] = { -- Terokk's Legacy
+            [questKeys.zoneOrSort] = zoneIDs.AUCHINDOUN_DUNGEONS,
+        },
         [10105] = {
             [questKeys.exclusiveTo] = {9796},
         },
@@ -2081,6 +2257,12 @@ function QuestieTBCQuestFixes:Load()
         },
         [10172] = {
             [questKeys.objectives] = {{{18141,"Speak to Greatmother Geyah",Questie.ICON_TYPE_TALK}}},
+        },
+        [10177] = { -- Trouble at Auchindoun
+            [questKeys.zoneOrSort] = zoneIDs.AUCHINDOUN_DUNGEONS,
+        },
+        [10178] = { -- Find Spy To'gun
+            [questKeys.zoneOrSort] = zoneIDs.AUCHINDOUN_DUNGEONS,
         },
         [10182] = {
             [questKeys.objectives] = {nil,{{183269,"Put Dathric's Spirit to Rest"}}},
@@ -2273,6 +2455,9 @@ function QuestieTBCQuestFixes:Load()
         [10344] = {
             [questKeys.exclusiveTo] = {10163},
         },
+        [10350] = { -- Behomat
+            [questKeys.preQuestSingle] = {1639,1678,1683,9582},
+        },
         [10352] = {
             [questKeys.startedBy] = {{14725},nil,nil},
             [questKeys.finishedBy] = {{14725},nil},
@@ -2292,6 +2477,9 @@ function QuestieTBCQuestFixes:Load()
         [10365] = {
             [questKeys.objectives] = {nil,{{184312}},{{29411}}},
         },
+        [10366] = { -- Jol
+            [questKeys.breadcrumbForQuestId] = 9598,
+        },
         [10367] = {
             [questKeys.preQuestSingle] = {},
         },
@@ -2300,6 +2488,11 @@ function QuestieTBCQuestFixes:Load()
         },
         [10369] = {
             [questKeys.objectives] = {{{19354}}},
+        },
+        [10371] = { -- Yorus Barleybrew
+            [questKeys.requiredRaces] = raceIDs.ALL_ALLIANCE,
+            [questKeys.exclusiveTo] = {1698},
+            [questKeys.breadcrumbForQuestId] = 1699,
         },
         [10373] = {
             [questKeys.startedBy] = {{20722},nil,nil},
@@ -2652,6 +2845,9 @@ function QuestieTBCQuestFixes:Load()
         },
         [10646] = {
             [questKeys.objectives] = {{{18417,"Illidan's Pupil"}}},
+        },
+        [10649] = { -- The Book of Fel Names
+            [questKeys.zoneOrSort] = zoneIDs.AUCHINDOUN_DUNGEONS,
         },
         [10652] = {
             [questKeys.extraObjectives] = {{nil,Questie.ICON_TYPE_TALK,l10n("Take a ride"),0,{{"monster",20162}}}},
@@ -3545,6 +3741,9 @@ function QuestieTBCQuestFixes:Load()
         [11123] = {
             [questKeys.preQuestSingle] = {},
         },
+        [11129] = { -- Kyle's Gone Missing!
+            [questKeys.objectives] = {{{23616,nil,Questie.ICON_TYPE_INTERACT}}},
+        },
         [11131] = {
             [questKeys.triggerEnd] = {"Put Out the Fires", {[zoneIDs.DUN_MOROGH]={{44.8,52.1},{47.5,51.6}},[zoneIDs.ELWYNN_FOREST]={{41.3,65.2},{43.6,65.8}},[zoneIDs.AZUREMYST_ISLE]={{49.8,52.3},{48.8,50}}}},
             [questKeys.requiredSourceItems] = {32971},
@@ -3605,6 +3804,10 @@ function QuestieTBCQuestFixes:Load()
         },
         [11198] = {
             [questKeys.objectives] = {{{23899,"Defend Theramore Docks from Tethyr"}}},
+        },
+        [11203] = {
+            [questKeys.preQuestSingle] = {},
+            [questKeys.preQuestGroup] = {11200,11201},
         },
         [11208] = {
             [questKeys.exclusiveTo] = {11158},
@@ -3865,6 +4068,9 @@ function QuestieTBCQuestFixes:Load()
         },
         [11545] = {
             [questKeys.requiredMaxRep] = {1077,42000},
+        },
+        [11549] = { -- A Magnanimous Benefactor
+            [questKeys.objectivesText] = {"Anchorite Kairthos wants you to donate 1000 gold to aid in Anchorite Ayuri's efforts. You will be known as <Name> of the Shattered Sun if you complete this quest."},
         },
         [11580] = {
             [questKeys.startedBy] = {nil,{187559},nil},
@@ -5456,10 +5662,12 @@ function QuestieTBCQuestFixes:Load()
             [questKeys.zoneOrSort] = sortKeys.BREWFEST,
         },
         [12513] = {
+            [questKeys.zoneOrSort] = zoneIDs.CAVERNS_OF_TIME,
             [questKeys.exclusiveTo] = {12515},
             [questKeys.requiredRaces] = raceIDs.GNOME + raceIDs.HUMAN + raceIDs.DWARF,
         },
         [12515] = {
+            [questKeys.zoneOrSort] = zoneIDs.CAVERNS_OF_TIME,
             [questKeys.exclusiveTo] = {12513},
             [questKeys.startedBy] = {{28126},nil},
             [questKeys.finishedBy] = {{28126},nil},

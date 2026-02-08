@@ -295,7 +295,7 @@ function QuestieOptions.tabs.general:Initialize()
                         name = function() return l10n("Map Coordinates Decimal Precision"); end,
                         desc = function() return l10n("How many decimals to include in the precision on the Map for Player and Cursor coordinates.\n(Default: %s)", optionsDefaults.profile.mapCoordinatePrecision); end,
                         width = 1.4,
-                        min = 1,
+                        min = 0,
                         max = 5,
                         step = 1,
                         disabled = function() return not Questie.db.profile.mapCoordinatesEnabled end,
@@ -474,9 +474,20 @@ function QuestieOptions.tabs.general:Initialize()
                             Questie.db.profile.enableTooltipsNextInChain = value
                         end
                     },
-                    partyOnlyToggle = {
+                    showDropRates = {
                         type = "toggle",
                         order = 8.6,
+                        name = function() return l10n("Show item drop rates"); end,
+                        desc = function() return l10n("When this is checked, drop rates for quest objectives will show on mob tooltips."); end,
+                        width = 1.5,
+                        get = function() return Questie.db.profile.enableTooltipDroprates; end,
+                        set = function (_, value)
+                            Questie.db.profile.enableTooltipDroprates = value
+                        end
+                    },
+                    partyOnlyToggle = {
+                        type = "toggle",
+                        order = 8.76,
                         name = function() return l10n("Only show party members"); end,
                         desc = function() return l10n("When this is enabled, shared quest info will only show players in your party."); end,
                         width = 1.5,
