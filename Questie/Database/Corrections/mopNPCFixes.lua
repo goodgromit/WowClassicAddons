@@ -225,6 +225,37 @@ function MopNpcFixes.Load()
             [npcKeys.spawns] = {[zoneIDs.SUNSTRIDER_ISLE] = {{62.26,42.31}}},
             [npcKeys.zoneID] = zoneIDs.SUNSTRIDER_ISLE,
         },
+        [15891] = { -- Lunar Festival Herald
+            [npcKeys.spawns] = {
+                [zoneIDs.ORGRIMMAR] = {{49.88,81.2}},
+                [zoneIDs.UNDERCITY] = {{66.74,43.39}},
+                [zoneIDs.THUNDER_BLUFF] = {{38.37,63.42}},
+                -- [zoneIDs.VALE_OF_ETERNAL_BLOSSOMS] = {}, not showing them here as they don't start quests here
+            },
+        },
+        [15892] = { -- Lunar Festival Emissary
+            [npcKeys.spawns] = {
+                [zoneIDs.STORMWIND_CITY] = {{61.73,75.73}},
+                [zoneIDs.IRONFORGE] = {{30.92,61.59}},
+                [zoneIDs.DARNASSUS] = {{45.16,52.24}},
+                -- [zoneIDs.VALE_OF_ETERNAL_BLOSSOMS] = {}, not showing them here as they don't start quests here
+            },
+        },
+        [15895] = { -- Lunar Festival Harbinger
+            [npcKeys.spawns] = {
+                [zoneIDs.DARNASSUS] = {{38.59,30.28}},
+                [zoneIDs.UNDERCITY] = {{65.62,36.0}},
+                [zoneIDs.ORGRIMMAR] = {{52.39,58.49}},
+                [zoneIDs.THUNDER_BLUFF] = {{71.12,28.2}},
+                [zoneIDs.IRONFORGE] = {{28.85,16.23}},
+                [zoneIDs.ELWYNN_FOREST] = {{34.24,50.56}},
+                [zoneIDs.THE_EXODAR] = {{74.02,57.47}},
+                [zoneIDs.SILVERMOON_CITY] = {{73.1,82.6}},
+                [zoneIDs.SHATTRATH_CITY] = {{53.29,33.1},{48.14,36.87}},
+                [zoneIDs.DALARAN] = {{47.65,43.76}},
+                [zoneIDs.VALE_OF_ETERNAL_BLOSSOMS] = {{85.29,64.88},{62.92,19.27}},
+            },
+        },
         [16802] = { -- Lor'themar Theron
             [npcKeys.spawns] = {
                 [zoneIDs.SILVERMOON_CITY] = {
@@ -501,6 +532,9 @@ function MopNpcFixes.Load()
         [47250] = { -- Carvo Blastbolt
             [npcKeys.spawns] = {[zoneIDs.NEW_TINKERTOWN_OLD] = {{50.95,31.94}}},
             [npcKeys.zoneID] = zoneIDs.NEW_TINKERTOWN_OLD,
+        },
+        [47897] = { -- Lunar Festival Vendor
+            [npcKeys.spawns] = {[zoneIDs.ORGRIMMAR] = {{53.1,56.13}}},
         },
         [49480] = { -- Tarindrella
             [npcKeys.spawns] = {[zoneIDs.SHADOWTHREAD_CAVE] = {{45.32,91.08}}},
@@ -4609,10 +4643,12 @@ function MopNpcFixes.Load()
             [npcKeys.zoneID] = zoneIDs.KRASARANG_WILDS,
         },
         [67660] = { -- Archmage Aethas Sunreaver
+            [npcKeys.spawns] = {
                 [zoneIDs.ISLE_OF_THUNDER] = {
                     {33,52.8,phases.IOT_HORDE_BOAT}, -- needs better coords
                     {46.87,66.91,phases.IOT_HORDE_DAWNSEEKER_PROMONTORY},
                 },
+            },
             [npcKeys.zoneID] = zoneIDs.ISLE_OF_THUNDER,
         },
         [67662] = { -- High Arcanist Savor
@@ -5935,17 +5971,21 @@ function MopNpcFixes.Load()
             [npcKeys.zoneID] = zoneIDs.ISLE_OF_THUNDER,
         },
         [69425] = { -- Sunwalker Dezco
+            [npcKeys.spawns] = {
                 [zoneIDs.ISLE_OF_THUNDER] = {
                     {33,52.8,phases.IOT_HORDE_BOAT}, -- needs better coords
                     {46.72,66.75,phases.IOT_HORDE_DAWNSEEKER_PROMONTORY},
                 },
+            },
             [npcKeys.zoneID] = zoneIDs.ISLE_OF_THUNDER,
         },
         [69433] = { -- Magistrix Saia
+            [npcKeys.spawns] = {
                 [zoneIDs.ISLE_OF_THUNDER] = {
                     {33,52.8,phases.IOT_HORDE_BOAT}, -- needs better coords
                     {46.92,66.89,phases.IOT_HORDE_DAWNSEEKER_PROMONTORY},
                 },
+            },
             [npcKeys.zoneID] = zoneIDs.ISLE_OF_THUNDER,
         },
         [69617] = { -- Lor'themar Theron
@@ -6188,8 +6228,9 @@ function MopNpcFixes.Load()
         [70059] = { -- Stunted Direhorn
             [npcKeys.zoneID] = zoneIDs.ISLE_OF_GIANTS,
             [npcKeys.spawns] = {
-                [zoneIDs.ISLE_OF_GIANTS] = {{67,75.2},{69.6,71.4},{69.8,71.6}}},
+                [zoneIDs.ISLE_OF_GIANTS] = {{67,75.2},{69.6,71.4},{69.8,71.6}},
                 [zoneIDs.ISLE_OF_THUNDER] = {{50.4,42.8},{50.8,43.4},{51,43.6}},
+            },
         },
         [70100] = { -- Wrathion
             [npcKeys.name] = "Wrathion",
@@ -6861,6 +6902,17 @@ function MopNpcFixes:LoadFactionFixes()
     local zoneIDs = ZoneDB.zoneIDs
 
     local npcFixesHorde = {
+        [15898] = { -- Lunar Festival Vendor
+            [npcKeys.spawns] = {
+                [zoneIDs.THUNDER_BLUFF] = {{70.56,27.83}},
+                [zoneIDs.UNDERCITY] = {{66.45,36.02}},
+                [zoneIDs.MOONGLADE] = {{36.58,58.1},{36.3,58.53}},
+                [zoneIDs.SHATTRATH_CITY] = {{52.63,33.25},{48.64,36.29}},
+                [zoneIDs.SILVERMOON_CITY] = {{73.41,82.17}},
+                [zoneIDs.DALARAN] = {{47.93,43.32}},
+                [zoneIDs.VALE_OF_ETERNAL_BLOSSOMS] = {{63.34,19.37}},
+            },
+        },
         [59151] = { -- Zhu's Watch Courier
             [npcKeys.spawns] = {[zoneIDs.KRASARANG_WILDS] = {{62.56, 25.46}}},
         },
@@ -6878,6 +6930,18 @@ function MopNpcFixes:LoadFactionFixes()
     }
 
     local npcFixesAlliance = {
+        [15898] = { -- Lunar Festival Vendor
+            [npcKeys.spawns] = {
+                [zoneIDs.ELWYNN_FOREST] = {{34.81,50.33}},
+                [zoneIDs.IRONFORGE] = {{29.92,14.21}},
+                [zoneIDs.DARNASSUS] = {{39.93,30.82}},
+                [zoneIDs.MOONGLADE] = {{36.58,58.1},{36.3,58.53}},
+                [zoneIDs.SHATTRATH_CITY] = {{52.63,33.25},{48.64,36.29}},
+                [zoneIDs.THE_EXODAR] = {{74.02,58.23}},
+                [zoneIDs.DALARAN] = {{47.93,43.32}},
+                [zoneIDs.VALE_OF_ETERNAL_BLOSSOMS] = {{84.91,65.09}},
+            },
+        },
         [59151] = { -- Zhu's Watch Courier
             [npcKeys.spawns] = {[zoneIDs.KRASARANG_WILDS] = {{66.2, 30.8}}},
         },

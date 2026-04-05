@@ -119,7 +119,7 @@ local townsfolkLocales = {
         ["koKR"] = "여관주인",
         ["ptBR"] = "Estalajadeiro",
         ["ruRU"] = "Хозяин таверны",
-        ["zhCN"] = "旅馆老板",
+        ["zhCN"] = "旅店老板",
         ["zhTW"] = "旅店老闆",
     },
     ["Mailbox"] = {
@@ -349,6 +349,18 @@ local townsfolkLocales = {
         ["ruRU"] = "Наставник боевых питомцев",
         ["zhCN"] = "战斗宠物训练师",
         ["zhTW"] = "戰寵訓練師",
+    },
+    ["Poisons"] = {
+        ["enUS"] = true,
+        ["deDE"] = "Gifte",
+        ["esES"] = "Venenos",
+        ["esMX"] = "Venenos",
+        ["frFR"] = true,
+        ["koKR"] = "독",
+        ["ptBR"] = "Venenos",
+        ["ruRU"] = "Яды",
+        ["zhCN"] = "毒药",
+        ["zhTW"] = "毒藥",
     },
 }
 

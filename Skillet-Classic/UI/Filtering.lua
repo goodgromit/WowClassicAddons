@@ -1,0 +1,244 @@
+local addonName,addonTable = ...
+local DA = LibStub("AceAddon-3.0"):GetAddon("Skillet") -- for DebugAids.lua
+--[[
+Skillet: A tradeskill window replacement.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+]]--
+
+local L = LibStub("AceLocale-3.0"):GetLocale("Skillet")
+
+--
+-- internal recipe filter
+--
+-- filter this recipe based on the values selected in the filter dropdown
+--
+-- most of the work has already been done and is stored in:
+--   subClass = Skillet.db.realm.subClass[player][tradeID]
+--   invSlot = Skillet.db.realm.invSlot[player][tradeID]
+-- indexed by itemID with the choices stored in a table:
+--   Skillet.db.realm.subClass[player][tradeID].name
+--   Skillet.db.realm.invSlot[player][tradeID].name
+--
+-- the filter dropdown will offer the choices in the name table
+-- and will set two global variables:
+--   Skillet.db.realm.subClass[player][tradeID].selected
+--   Skillet.db.realm.invSlot[player][tradeID].selected
+--
+function Skillet:RecipeFilter(skillIndex)
+	--DA.DEBUG(0,"RecipeFilter("..tostring(skillIndex)..")")
+	local skill = Skillet:GetSkill(Skillet.currentPlayer, Skillet.currentTrade, skillIndex)
+	--DA.DEBUG(1,"skill= "..DA.DUMP1(skill,1))
+	local recipe = Skillet:GetRecipe(skill.id)
+	--DA.DEBUG(1,"recipe= "..DA.DUMP1(recipe,1))
+	local subClass = Skillet.db.realm.subClass[Skillet.currentPlayer][Skillet.currentTrade]
+	local invSlot = Skillet.db.realm.invSlot[Skillet.currentPlayer][Skillet.currentTrade]
+	local itemID = recipe.itemID
+	if not ItemID and not subClass.selected and not invSlot.selected then
+		DA.DEBUG(1,"RecipeFilter: not initialized yet")
+		return false
+	end
+	if not Skillet.isCraft then
+		if subClass.selected == "None" and invSlot.selected == "None" then
+			--DA.DEBUG(1,"RecipeFilter(T): not filtering anything")
+			return false
+		end
+		DA.DEBUG(1,"RecipeFilter(T): itemID= "..tostring(itemID)..", subClass= "..tostring(subClass[itemID])..", invSlot= "..tostring(invSlot[itemID]))
+		DA.DEBUG(1,"RecipeFilter(T): subClass.selected= "..tostring(subClass.selected)..", invSlot.selected= "..tostring(invSlot.selected))
+		if subClass[itemID] == subClass.selected or invSlot[itemID] == invSlot.selected then
+			DA.DEBUG(1,"RecipeFilter(T): filtering active, "..tostring(recipe.name).." met the criteria")
+			return false
+		end
+		DA.DEBUG(1,"RecipeFilter(T): filtering active, "..tostring(recipe.name).." did not meet the criteria")
+		return true
+	else
+		if invSlot.selected == "None" then
+			--DA.DEBUG(1,"RecipeFilter(C): not filtering anything")
+			return false
+		end
+		DA.DEBUG(1,"RecipeFilter(C): itemID= "..tostring(itemID)..", invSlot= "..tostring(invSlot[itemID]))
+		DA.DEBUG(1,"RecipeFilter(C): invSlot.selected= "..tostring(invSlot.selected))
+		if invSlot[itemID] == invSlot.selected then
+			DA.DEBUG(1,"RecipeFilter(C): filtering active, "..tostring(recipe.name).." met the criteria")
+			return false
+		end
+		DA.DEBUG(1,"RecipeFilter(C): filtering active, "..tostring(recipe.name).." did not meet the criteria")
+		return true
+	end
+end
+
+--
+-- Called when the new filter drop down is displayed
+--
+function Skillet:FilterDropDown_OnShow()
+	--DA.DEBUG(0,"FilterDropDown_OnShow()")
+	UIDropDownMenu_Initialize(SkilletFilterDropdown, Skillet.FilterDropDown_Initialize)
+	SkilletFilterDropdown.displayMode = "MENU"  -- changes the pop-up borders to be rounded instead of square
+	UIDropDownMenu_SetSelectedID(SkilletFilterDropdown, self.filterSelected)
+end
+
+--
+-- called when the new filter drop down is first loaded
+--
+function Skillet:FilterDropDown_OnLoad()
+	--DA.DEBUG(0,"FilterDropDown_OnLoad()")
+	UIDropDownMenu_Initialize(SkilletFilterDropdown, Skillet.FilterDropDown_Initialize)
+	SkilletFilterDropdown.displayMode = "MENU"  -- changes the pop-up borders to be rounded instead of square
+	UIDropDownMenu_SetSelectedID(SkilletFilterDropdown, self.filterSelected)
+end
+
+--
+-- The method we use the initialize the new filter drop down.
+--
+function Skillet.FilterDropDown_Initialize(menuFrame,level)
+	--DA.DEBUG(0,"FilterDropDown_Initialize("..tostring(menuFrame)..", "..tostring(level)..")")
+	local player, tradeID = Skillet.currentPlayer, Skillet.currentTrade
+	if not player or not tradeID then return end
+	local subClass = Skillet.db.realm.subClass[player][tradeID]
+	local invSlot = Skillet.db.realm.invSlot[player][tradeID]
+	local index = 1
+	Skillet.filterSelected = index
+	local info
+	info = UIDropDownMenu_CreateInfo()
+	info.text = L["None"]
+	info.func = Skillet.FilterDropDown_OnClick
+	info.value = index
+	info.arg1 = "None"
+	info.arg2 = "None"
+	UIDropDownMenu_AddButton(info)
+	index = index + 1
+
+	if not Skillet.isCraft then
+		info = UIDropDownMenu_CreateInfo()
+		info.text = L["SubClass"]
+		info.func = Skillet.FilterDropDown_OnClick
+		info.value = index
+		info.isTitle = true
+		UIDropDownMenu_AddButton(info)
+		index = index + 1
+
+		if subClass.name then
+			for n,c in pairs(subClass.name) do
+				info = UIDropDownMenu_CreateInfo()
+				info.text = "    "..(n or "")
+				info.func = Skillet.FilterDropDown_OnClick
+				info.value = index
+				info.arg1 = n
+				info.arg2 = "None"
+				if subClass.selected == n then
+					Skillet.filterSelected = index
+				end
+				UIDropDownMenu_AddButton(info)
+				index = index + 1
+			end
+		end
+	end
+
+	info = UIDropDownMenu_CreateInfo()
+	if not Skillet.isCraft then
+		info.text = L["InvSlot"]
+	else
+		info.text = L["InvSlot"]
+	end
+	info.func = Skillet.FilterDropDown_OnClick
+	info.value = index
+	info.isTitle = true
+	UIDropDownMenu_AddButton(info)
+	index = index + 1
+
+	if not Skillet.isCraft then
+		if invSlot.name then
+			for n,c in pairs(invSlot.name) do
+				info = UIDropDownMenu_CreateInfo()
+				info.text = "    "..(_G[n] or "")
+				info.func = Skillet.FilterDropDown_OnClick
+				info.value = index
+				info.arg1 = "None"
+				info.arg2 = n
+				if invSlot.selected == n then
+					Skillet.filterSelected = index
+				end
+				UIDropDownMenu_AddButton(info)
+				index = index + 1
+			end
+		end
+	else
+		for n, slot in ipairs({GetCraftSlots()}) do
+			info = UIDropDownMenu_CreateInfo()
+			--DA.DEBUG(1,"FilterDropDown_Initialize: index= "..tostring(index)..", n= "..tostring(n)..", slot= "..tostring(slot))
+			info.text = "    "..(getglobal(slot) or "")
+			info.func = Skillet.CraftDropDown_OnClick
+			info.value = index
+			info.arg1 = "None"
+			info.arg2 = slot
+			if invSlot.selected == slot then
+				Skillet.filterSelected = index
+			end
+			UIDropDownMenu_AddButton(info)
+			index = index + 1
+		end
+	end
+end
+
+--
+-- Called when the user selects an item in the new filter drop down
+--
+function Skillet:FilterDropDown_OnClick(arg1,arg2)
+	DA.DEBUG(0,"FilterDropDown_OnClick("..tostring(arg1)..", "..tostring(arg2).."), GetID= "..self:GetID())
+	UIDropDownMenu_SetSelectedID(SkilletFilterDropdown, self:GetID())
+	Skillet.db.realm.subClass[Skillet.currentPlayer][Skillet.currentTrade].selected = arg1
+	Skillet.db.realm.invSlot[Skillet.currentPlayer][Skillet.currentTrade].selected = arg2
+	Skillet.dataScanned = false
+	Skillet:UpdateTradeSkillWindow()
+end
+
+--
+-- Called when the user selects an item in the new filter drop down
+--
+function Skillet:CraftDropDown_OnClick(arg1,arg2)
+	DA.DEBUG(0,"CraftDropDown_OnClick("..tostring(arg1)..", "..tostring(arg2).."), GetID= "..self:GetID())
+	UIDropDownMenu_SetSelectedID(SkilletFilterDropdown, self:GetID())
+	Skillet.db.realm.subClass[Skillet.currentPlayer][Skillet.currentTrade].selected = arg1
+	Skillet.db.realm.invSlot[Skillet.currentPlayer][Skillet.currentTrade].selected = arg2
+	Skillet.dataScanned = false
+	Skillet:UpdateTradeSkillWindow()
+end
+
+Skillet.item_slot_types = {
+  ["HEADSLOT"]  = HEADSLOT,
+  ["NECKSLOT"]  = NECKSLOT,
+  ["SHOULDERSLOT"]  = SHOULDERSLOT,
+  ["SHIRTSLOT"]  = SHIRTSLOT,
+  ["CHESTSLOT"]  = CHESTSLOT,
+  ["WAISTSLOT"]  = WAISTSLOT,
+  ["LEGSSLOT"]  = LEGSSLOT,
+  ["FEETSLOT"]  = FEETSLOT,
+  ["WRISTSLOT"]  = WRISTSLOT,
+  ["HANDSSLOT"] = HANDSSLOT,
+  ["BACKSLOT"] = BACKSLOT,
+  ["MAINHANDSLOT"] = MAINHANDSLOT,
+  ["SECONDARYHANDSLOT"] = SECONDARYHANDSLOT,
+  ["RANGEDSLOT"] = RANGEDSLOT,
+  ["FINGERSLOT"] = FINGERSLOT,
+  ["TABARDSLOT"] = TABARDSLOT,
+  ["NONEQUIPSLOT"] = NONEQUIPSLOT,
+  ["FINGER0SLOT_UNIQUE"] = FINGER0SLOT_UNIQUE,
+  ["FINGER1SLOT_UNIQUE"] = FINGER1SLOT_UNIQUE,
+  ["TRINKET0SLOT_UNIQUE"] = TRINKET0SLOT_UNIQUE,
+  ["TRINKET1SLOT_UNIQUE"] = TRINKET1SLOT_UNIQUE,
+}
+
+function Skillet:ConvertSlots()
+end
+	

@@ -1168,6 +1168,15 @@ local default_profile = {
 			line_height = 17,
 
 			show_border_shadow = true, --from spell tooltips from the main window
+
+			--apocalypse
+			show_header = true,
+			show_percent_column = true,
+			show_dps_column = true,
+			show_help = true,
+			show_help_count = 0, --when reaches MAX_TOOLTIP_HELP, set show_help to false
+			apocalypse_width = 300,
+			apocalypse_width_useline = false,
 		},
 
 	--new window system
@@ -1426,6 +1435,8 @@ local default_global_data = {
 		last_10days_cache_cleanup = 0,
 		recent_players = {},
 
+		appocalypse_mode = 0,
+
 		slashk_dnd = false,
 		slashk_addon = "bigwigs",
 		slashk_addon_first = false,
@@ -1515,6 +1526,17 @@ local default_global_data = {
 	},
 
 	frame_background_color = {0.0549, 0.0549, 0.0549, 0.934},
+
+	breakdown_midnight = {
+		players = {width = 200, height = 296},
+		segments = {width = 200, height = 228},
+		spells = {width = 464, height = 398},
+		targets = {width = 300, height = 170},
+		spelldetails = {width = 231, height = 261},
+		compare = {width = 231, height = 200},
+		headers_width = {},
+		headers_shown = {},
+	},
 
 --/run Details.breakdown_spell_tab.spellcontainer_height = 311 --352
 	--breakdown spell tab

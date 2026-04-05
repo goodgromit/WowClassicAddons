@@ -5516,6 +5516,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			_current_combat.is_pvp = {name = zoneName, mapid = zoneMapID}
 
 			if (Details.use_battleground_server_parser) then
+				if detailsFramework.IsAddonApocalypseWow() then
+					return
+				end
+
 				if (Details.time_type == 1) then
 					Details.time_type_original = 1
 					Details.time_type = 2
@@ -5957,7 +5961,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 		table.wipe(interruptOverlapCache)
 
-		if (Details.auto_swap_to_dynamic_overall) then
+		if (not detailsFramework:IsAddonApocalypseWow() and Details.auto_swap_to_dynamic_overall) then
 			Details:InstanceCall(autoSwapDynamicOverallData, true)
 		end
 
@@ -5966,7 +5970,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 		_trinket_data_cache = Details:GetTrinketData()
 
-		if (Details.zone_type == "pvp" and not Details.use_battleground_server_parser) then
+		if (Details.zone_type == "pvp" and (not Details.use_battleground_server_parser and not detailsFramework:IsAddonApocalypseWow())) then
 			if (_in_combat) then
 				Details:SairDoCombate()
 			end
@@ -6380,7 +6384,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			end
 		end
 
-		if (Details.auto_swap_to_dynamic_overall) then
+		if (not detailsFramework:IsAddonApocalypseWow() and Details.auto_swap_to_dynamic_overall) then
 			Details:InstanceCall(autoSwapDynamicOverallData, false)
 		end
 

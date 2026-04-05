@@ -58,6 +58,15 @@ function QuestieObjectFixes:Load()
             [objectKeys.spawns] = {[zoneIDs.DARKSHORE]={{38.6,86.2}}},
             [objectKeys.zoneID] = zoneIDs.DARKSHORE,
         },
+        [13891] = { -- Serpentbloom
+            [objectKeys.spawns] = {[zoneIDs.KALIMDOR]={{51.877,54.964}},[zoneIDs.THE_BARRENS]={{49.08,33.51},{48.06,31.9},{47.49,32.92},{46.91,32.73},{48.85,32.25},{46.66,34.48},{46.06,32.74},{46.51,35.56},{49.05,34.16},{48.09,32.41},{47.66,32.22},{46.21,34.72},{45.68,33.82},{48.08,34.31},{47.62,33.85}},[zoneIDs.WAILING_CAVERNS]={{-1,-1}}},
+            [objectKeys.zoneID] = zoneIDs.WAILING_CAVERNS,
+        },
+        [15885] = { -- Shrine Of Remulos
+            [objectKeys.name] = "Shrine Of Remulos",
+            [objectKeys.spawns] = {[zoneIDs.MOONGLADE]={{36.0,41.42}}},
+            [objectKeys.zoneID] = zoneIDs.MOONGLADE,
+        },
         [19021] = {
             [objectKeys.spawns] = {[zoneIDs.ASHENVALE]={{69.04,84.77},{77.03,73.8},{79.08,74.48},{70.53,73.58},{70.68,85.06},{69.29,82.67},{71.29,83.83},{77.97,65.82},{77.38,69.77},{77.06,68.3},{69.87,74.11},{78.3,73.6},{76.22,67.48},{76.62,70.67},{76.77,72.19},{78.31,69.73},{68.24,77.68},{77.68,72.63},{74.77,69.6},{78.26,64.58},{70.72,75.24},{74.23,69.47},{74.36,70.21},{75.88,73.52},{75.87,69.99},{69.89,85.32},{74.34,77.92},{70.1,76.08},{74.58,77.19},{74.67,75.39},{76.67,68.46},{68.94,84.86},{74.41,73.38},{74.46,75.56},{73.09,73.23},{71.04,73.8},{71.45,76.97},{73.68,76.95},{72.63,76.86},{70.77,75.99},{72.51,75.12}}},
             [objectKeys.zoneID] = zoneIDs.ASHENVALE,
@@ -89,10 +98,7 @@ function QuestieObjectFixes:Load()
             [objectKeys.spawns] = {[zoneIDs.WETLANDS]={{32.2,50.8},{32.3,48.4},{32.3,48.6},{32.7,51},{33.2,46.4},{33.3,49},{33.4,47.4},{33.4,47.6},{33.4,51.5},{33.8,48.6},{33.9,46.6},{34.1,49.7},{34.2,47.6},{34.2,50.8},{34.3,45.7},{34.4,44.4},{34.4,44.5},{34.7,52.5},{34.8,50.3},{34.9,47},{35,47.9},{35.1,51.5},{35.2,44.3},{35.2,44.5},{35.2,48.9},{35.2,51.4},{35.4,46.3},{35.5,45},{35.5,46},{35.6,47.9},{36.1,48.8},{36.1,50},{36.4,42.1},{36.6,42.2}}},
         },
         [92423] = {
-            [objectKeys.spawns] = {
-                [zoneIDs.THOUSAND_NEEDLES]={{43.4, 32.7}},
-                [zoneIDs.THE_BARRENS]={{49.02,96.77}},
-            },
+            [objectKeys.spawns] = {[zoneIDs.THOUSAND_NEEDLES]={{43.44,32.69}}},
             [objectKeys.zoneID] = zoneIDs.THOUSAND_NEEDLES,
         },
         [93192] = {
@@ -101,12 +107,6 @@ function QuestieObjectFixes:Load()
         [103662] = {
             [objectKeys.spawns] = {[zoneIDs.ARATHI_HIGHLANDS]={{52,50.8}}},
             [objectKeys.zoneID] = zoneIDs.ARATHI_HIGHLANDS,
-        },
-        [105174] = {
-            [objectKeys.spawns] = {
-                [zoneIDs.STORMWIND_CITY]={{38.7,79.1}},
-                [zoneIDs.UNDERCITY]={{85.5,10.2}},
-            },
         },
         [112877] = {
             [objectKeys.spawns] = {[zoneIDs.ULDAMAN]={{-1,-1}}},
@@ -124,6 +124,10 @@ function QuestieObjectFixes:Load()
         [142194] = {
             [objectKeys.spawns] = {[zoneIDs.TANARIS]={{54,93}}},
             [objectKeys.zoneID] = zoneIDs.TANARIS,
+        },
+        [142345] = { -- Matrix Punchograph 3005-A
+            [objectKeys.spawns] = {[zoneIDs.EASTERN_KINGDOMS] = {{42.83,59.191},{42.854,59.193},{42.838,59.386},{42.798,59.381}}},
+            [objectKeys.zoneID] = zoneIDs.EASTERN_KINGDOMS,
         },
         [144052] = {
             [objectKeys.spawns] = {[zoneIDs.TANARIS]={{39,29}}},
@@ -221,6 +225,9 @@ function QuestieObjectFixes:Load()
                 [zoneIDs.TIRISFAL_GLADES]={{82.8,72.7},{83,71.4},{83,71.5}},
             },
         },
+        [176344] = { -- Document Chest
+            [objectKeys.spawns] = {[zoneIDs.THOUSAND_NEEDLES] = {{31.79,32.58}}},
+        },
         [176589] = {
             [objectKeys.spawns] = {
                 [zoneIDs.BURNING_STEPPES]={{13.2,30.8},{15.1,30.3},{18.8,48.7},{20.9,46.6},{21,46.4},{25.1,62.5},{26.4,59.2},{28.8,62.6},{31.4,61.7},{31.5,61.7},{31.9,69.4},{35.4,49.1},{35.5,49.1},{42.6,37.6},{43.1,34.4},{43.1,34.5},{44.2,57.1},{51,61.9},{54.3,63.4},{54.7,36.4},{56.3,53.7},{57.4,61.5},{57.6,61.6},{63.2,36.9},{63.7,60.8},{66.5,40},{76.4,47.2},{76.4,47.5},{76.5,47.2},{76.5,47.5},{82.5,34.2},{83,38},{92.1,53.2}},
@@ -244,6 +251,10 @@ function QuestieObjectFixes:Load()
                 [zoneIDs.FERALAS]={{32.56,43.91},{57.97,44.49}},
             },
         },
+        [177624] = { -- Xabraxxis' Demon Bag
+            [objectKeys.spawns] = {[zoneIDs.DARKSHORE] = {{52.48,33.39}}},
+            [objectKeys.zoneID] = zoneIDs.DARKSHORE,
+        },
         [177673] = { -- Desolace for quest 6027
             [objectKeys.name] = "Serpent Statue",
             [objectKeys.spawns] = {[zoneIDs.DESOLACE]={{28.24,6.67}}},
@@ -264,6 +275,10 @@ function QuestieObjectFixes:Load()
         },
         [179544] = {
             [objectKeys.name] = "Skeletal Remains of Telmius Dreamseeker",
+        },
+        [179547] = { -- A Dusty Tome
+            [objectKeys.spawns] = {[zoneIDs.DIRE_MAUL]={{-1,-1}}},
+            [objectKeys.zoneID] = zoneIDs.DIRE_MAUL,
         },
         [179703] = { -- Cache of the Firelord
             [objectKeys.questStarts] = {7632},
@@ -287,6 +302,34 @@ function QuestieObjectFixes:Load()
             [objectKeys.spawns] = {[zoneIDs.SILITHUS]={{25.72,90.86}}},
             [objectKeys.zoneID] = zoneIDs.SILITHUS,
         },
+        [180771] = { -- Firework Launcher
+            [objectKeys.spawns] = {
+                [zoneIDs.MOONGLADE]={{35.95,58.69},{37.38,59.26},{36.92,56.77},{37.39,59.64},{36.45,57.12},{37.15,57.88},{45.25,38.5},{35.98,59.94},{36.52,60.23},{36.61,59.4},{36.5,56.81},{37.2,58.45},{53.92,36.84},{37.9,58.39},{47.91,33.35},{54.16,36.9},{37.59,58.72},{35.68,58.43},{36.15,57.41},{47.66,34.75},{37.05,59.11},{35.69,57.86},{35.48,58.67},{44.97,42.58},{53.38,36.7},{36.3,57.86},{42.64,35.39},{53.63,36.77},{48.78,34.52},{53.07,36.61},{50.92,37.23}},
+                [zoneIDs.UNDERCITY]={{57.82,63.6},{58.43,64.13},{76.71,27.62},{56.96,25.43},{52.76,55.96},{73.87,63.84},{56.39,26.07},{50.61,56.53},{55.13,23.62},{78.68,26.13},{50.97,57.45},{66.37,37.57},{66,37.76},{65.65,37.56},{65.45,36.74},{66.59,36.75}},
+                [zoneIDs.STORMWIND_CITY]={{22.15,52.35},{22.02,51.4},{22.45,52.47},{23.01,52.87},{22.57,53.63},{22.95,51.91},{22.72,53.18},{22.16,52.74},{22.57,51.67},{45.32,57.29},{45.35,57.86},{31.29,63.89},{63.92,52.51},{31.1,64.18},{45.33,57.48},{63.81,52.38},{31.39,63.77},{45.34,57.68},{55.53,33.67}},
+                [zoneIDs.IRONFORGE]={{29.85,18.67},{29.1,19.58},{30.72,19.34},{31.43,19.12},{31.42,16.83},{31.76,18.09},{30.45,20.68},{32.61,18.02},{32.16,15.77},{65.43,26.28},{65.06,25.57}},
+                [zoneIDs.ORGRIMMAR]={{41.97,32.52},{41.51,30.6},{40.45,30.64},{40.98,30.18},{40.61,30.1},{41.53,32.96},{40.49,31.65},{69.75,30.22},{48.86,77.18},{49.25,77.38},{69.88,30.02},{69.61,30.4},{49.44,77.48}},
+                [zoneIDs.THUNDER_BLUFF]={{72.0,26.37},{71.24,27.05},{71.12,25.74},{71.58,27.15},{71.02,26.7},{54.96,50.34},{54.95,52.01},{54.96,51.85},{54.95,50.95}},
+                [zoneIDs.DARNASSUS]={{31.88,13.19},{31.22,12.15},{32.14,11.9},{32.26,12.73},{31.31,13.0},{31.63,11.64},{69.77,43.22},{69.3,38.49},{68.94,43.19},{67.66,43.25},{69.36,43.22},{68.53,43.2}},
+            },
+        },
+        [180772] = { -- Cluster Launcher
+            [objectKeys.spawns] = {
+                [zoneIDs.MOONGLADE]={{36.43,57.61},{36.77,59.74},{35.88,58.39},{53.23,36.66},{53.5,36.74},{37.15,57.61},{35.87,57.31},{35.48,59.15},{44.59,38.64},{37.32,58.85},{36.05,59.5},{37.16,59.96},{54.05,36.87},{42.53,34.3},{53.79,36.8},{37.92,58.14},{36.44,59.26},{36.74,56.71},{54.29,36.93}},
+                [zoneIDs.UNDERCITY]={{65.48,37.17},{66.54,37.17},{55.7,22.96},{52.43,55.02},{74.88,66.58},{73.24,64.33},{74.28,67.11},{77.21,28.36},{78.99,56.28},{79.36,55.39},{78.21,25.35}},
+                [zoneIDs.STORMWIND_CITY]={{22.28,52.14},{22.34,52.9},{63.59,52.18},{63.69,52.28},{31.2,64.05},{55.64,34.25},{55.57,33.85},{55.62,34.04}},
+                [zoneIDs.IRONFORGE]={{28.84,17.94},{31.36,17.51},{31.75,19.74},{31.14,15.12},{30.36,18.71},{63.49,22.7},{64.26,24.08},{63.88,23.38},{64.67,24.8}},
+                [zoneIDs.ORGRIMMAR]={{41.18,30.57},{40.62,31.12},{49.05,77.27},{49.6,77.54}},
+                [zoneIDs.THUNDER_BLUFF]={{71.4,25.41},{72.05,25.95},{54.96,50.53},{54.94,52.23},{54.94,52.44},{54.97,50.73}},
+                [zoneIDs.DARNASSUS]={{31.96,12.87},{31.87,11.98},{68.89,38.51},{69.76,38.49},{68.09,43.22},{68.52,38.51},{67.96,38.5},{67.4,38.5}},
+            },
+        },
+        [181073] = { -- Fragrant Cauldron 
+            [objectKeys.spawns] = {[zoneIDs.ALTERAC_MOUNTAINS] = {{89.41,75.06}}},
+        },
+        [181598] = { -- Silithyst Geyser
+            [objectKeys.spawns] = {[zoneIDs.SILITHUS]={{41.17,77.14},{49.21,44.84},{35.7,66.4},{41.67,27.04},{26.42,81.5},{20.84,81.43},{31.28,65.46},{39.94,22.35},{36.7,77.47},{18.88,80.26},{50.45,50.69},{38.91,80.85},{36.09,29.92},{48.83,85.1},{36.02,38.35},{59.25,58.77},{64.01,70.86},{60.61,63.0},{58.07,49.96}}},
+        },
         [186420] = { -- Syndicate Documents
             [objectKeys.questStarts] = {},
         },
@@ -299,8 +342,13 @@ function QuestieObjectFixes:Load()
         [188123] = {
             [objectKeys.spawns] = {}, -- Mailbox possibly added in TBC/BC. Not there in Classic
         },
-        [181598] = { -- Silithyst Geyser
-            [objectKeys.spawns] = {[zoneIDs.SILITHUS]={{41.17,77.14},{49.21,44.84},{35.7,66.4},{41.67,27.04},{26.42,81.5},{20.84,81.43},{31.28,65.46},{39.94,22.35},{36.7,77.47},{18.88,80.26},{50.45,50.69},{38.91,80.85},{36.09,29.92},{48.83,85.1},{36.02,38.35},{59.25,58.77},{64.01,70.86},{60.61,63.0},{58.07,49.96}}},
+        [190483] = { -- Document Chest
+            [objectKeys.spawns] = {[zoneIDs.THOUSAND_NEEDLES] = {{33.76,39.99}}},
+            [objectKeys.zoneID] = zoneIDs.THOUSAND_NEEDLES,
+        },
+        [190484] = { -- Document Chest
+            [objectKeys.spawns] = {[zoneIDs.THOUSAND_NEEDLES] = {{39.34,41.53}}},
+            [objectKeys.zoneID] = zoneIDs.THOUSAND_NEEDLES,
         },
         [375544] = {
             [objectKeys.name] = "Wooden Figurine",
@@ -378,6 +426,20 @@ function QuestieObjectFixes:LoadFactionFixes()
     local zoneIDs = ZoneDB.zoneIDs
 
     local objectFixesHorde = {
+        [103574] = { -- Filled Containment Coffer
+            [objectKeys.spawns] = {[zoneIDs.UNDERCITY]={{53.29,74.56},{53.67,76.81},{52.01,75.96},{53.2,71.44}}},
+            [objectKeys.zoneID] = zoneIDs.UNDERCITY,
+        },
+        [105174] = { -- Chest of Containment Coffers
+            [objectKeys.spawns] = {[zoneIDs.UNDERCITY]={{85.67,9.91},{85.53,10.03},{85.48,9.9},{85.58,9.95}}},
+        },
+        [105175] = { -- Cantation of Manifestation
+            [objectKeys.spawns] = {[zoneIDs.UNDERCITY]={{85.78,10.05},{85.7,10.11},{85.65,10.18}}},
+        },
+        [177525] = { -- Moonkin Stone
+            [objectKeys.spawns] = {[zoneIDs.THE_BARRENS]={{41.96,60.81}}},
+            [objectKeys.zoneID] = zoneIDs.THE_BARRENS,
+        },
         [180743] = {
             [objectKeys.spawns] = {[zoneIDs.ORGRIMMAR]={{52.39,69.52}}},
         },
@@ -396,6 +458,20 @@ function QuestieObjectFixes:LoadFactionFixes()
     }
 
     local objectFixesAlliance = {
+        [103574] = { -- Filled Containment Coffer
+            [objectKeys.spawns] = {[zoneIDs.STORMWIND_CITY]={{40.87,89.04},{40.75,92.13},{41.27,90.54},{40.26,88.13},{40.89,87.75},{40.47,91.94}}},
+            [objectKeys.zoneID] = zoneIDs.STORMWIND_CITY,
+        },
+        [105174] = { -- Chest of Containment Coffers
+            [objectKeys.spawns] = {[zoneIDs.STORMWIND_CITY]={{38.48,78.89},{38.55,79.04},{38.54,78.97},{38.62,79.02}}},
+        },
+        [105175] = { -- Cantation of Manifestation
+            [objectKeys.spawns] = {[zoneIDs.STORMWIND_CITY]={{38.68,78.73},{38.69,78.81},{38.73,78.84}}},
+        },
+        [177525] = { -- Moonkin Stone
+            [objectKeys.spawns] = {[zoneIDs.DARKSHORE]={{43.5,45.97}}},
+            [objectKeys.zoneID] = zoneIDs.DARKSHORE,
+        },
         [180743] = {
             [objectKeys.spawns] = {[zoneIDs.IRONFORGE]={{33.86,65.69}}},
         },
