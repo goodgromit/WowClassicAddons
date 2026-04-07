@@ -528,9 +528,10 @@ end
 
 --
 -- Called when the list of skills is scrolled
+-- Uses lightweight update for better scroll performance
 --
 function Skillet:SkillList_OnScroll()
-	Skillet:UpdateTradeSkillWindow()
+	Skillet:UpdateSkillButtons()
 end
 
 --
@@ -1017,6 +1018,293 @@ function Skillet:DelayUpdate()
 	end
 end
 --
+-- Lightweight function to update only visible skill buttons (for scrolling)
+-- Reuses already scanned and sorted data
+--
+function Skillet:UpdateSkillButtons()
+	DA.DEBUG(0,"UpdateSkillButtons()")
+	if not self.currentPlayer or not self.currentTrade then
+		DA.DEBUG(3,"leaving early, no player or no trade")
+		return
+	end
+	local skillListKey = self.currentPlayer..":"..self.currentTrade..":"..self.currentGroupLabel
+	local sortedSkillList = self.data.sortedSkillList and self.data.sortedSkillList[skillListKey]
+	if not sortedSkillList then
+		DA.DEBUG(3,"no sorted skill list, doing full update")
+		self:UpdateTradeSkillWindow()
+		return
+	end
+
+	local numTradeSkills = sortedSkillList.count or 0
+	local button_count = self.button_count or math.floor((SkilletFrame:GetHeight() - SKILLET_HEADER_HEIGHT) / SKILLET_TRADE_SKILL_HEIGHT)
+
+	-- Update scroll frame
+	FauxScrollFrame_Update(SkilletSkillList, numTradeSkills, button_count, SKILLET_TRADE_SKILL_HEIGHT)
+	local skillOffset = FauxScrollFrame_GetOffset(SkilletSkillList)
+
+	-- Calculate widths
+	local width = SkilletSkillListParent:GetWidth() - 10
+	if SkilletSkillList:IsVisible() then
+		width = width - 20
+	end
+
+	local uiScale = SkilletFrame:GetEffectiveScale()
+	local max_text_width = width
+	local showOwned = self:GetTradeSkillOption("filterInventory-owned")
+	local showBag = self:GetTradeSkillOption("filterInventory-bag")
+	local showCraft = self:GetTradeSkillOption("filterInventory-crafted")
+	local showVendor = self:GetTradeSkillOption("filterInventory-vendor")
+	local showAlts = self:GetTradeSkillOption("filterInventory-alts")
+	local catstring = {}
+
+	SkilletHighlightFrame:Hide()
+	SkilletFrameEmptySpace.skill.subGroup = self:RecipeGroupFind(self.currentPlayer,self.currentTrade,self.currentGroupLabel,self.currentGroup)
+	self.visibleSkillButtons = math.min(numTradeSkills - skillOffset, button_count)
+
+	-- Update visible buttons
+	for i=1, button_count, 1 do
+		local rawSkillIndex = i + skillOffset
+		local button, buttonDrag = get_recipe_button(i)
+		button.rawIndex = rawSkillIndex
+		button:SetWidth(width)
+
+		if rawSkillIndex <= numTradeSkills then
+			local skill = sortedSkillList[rawSkillIndex]
+			local skillIndex = skill.skillIndex
+			local buttonText = _G[button:GetName() .. "Name"]
+			local levelText = _G[button:GetName() .. "Level"]
+			local countText = _G[button:GetName() .. "Counts"]
+			local suffixText = _G[button:GetName() .. "Suffix"]
+			local buttonExpand = _G[button:GetName() .. "Expand"]
+			local skillRankBar = _G[button:GetName() .. "SubSkillRankBar"]
+
+			buttonText:SetText("")
+			levelText:SetText("")
+			countText:SetText("")
+			countText:Hide()
+			countText:SetWidth(10)
+			suffixText:SetText("")
+			suffixText:Hide()
+			skillRankBar:Hide()
+
+			if self.db.profile.display_required_level or self.db.profile.display_item_level then
+				levelText:SetWidth(math.max(skill.depth*8+20,28))
+			else
+				levelText:SetWidth(skill.depth*8)
+			end
+
+			local textAlpha = 1
+			if self.dragEngaged then
+				buttonDrag:SetWidth(width)
+				button.highlight:Hide()
+				if Skillet.mouseOver then
+					if Skillet.mouseOver.skill.subGroup then
+						if button == Skillet.mouseOver then
+							button.highlight:Show()
+						end
+					elseif skill.subGroup == Skillet.mouseOver.skill.parent then
+						button.highlight:Show()
+					end
+				end
+				textAlpha = .75
+				local dx = self.selectedTextOffsetXY[1] / uiScale
+				local dy = self.selectedTextOffsetXY[2] / uiScale
+				buttonDrag:SetPoint("TOPLEFT", button, "TOPLEFT", buttonDrag.skill.depth*8-8+dx, dy)
+			else
+				if skill.selected then
+					button.highlight:Show()
+				else
+					button.highlight:Hide()
+				end
+			end
+
+			if skill.subGroup then
+				if SkillButtonNameEdit.originalButton ~= buttonText then
+					buttonText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, textAlpha)
+					countText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, textAlpha)
+					local expanded = skill.subGroup.expanded
+					if expanded then
+						buttonExpand:SetNormalTexture("Interface\\Addons\\Skillet-Classic\\Icons\\expand_arrow_open.tga")
+						buttonExpand:SetHighlightTexture("Interface\\Addons\\Skillet-Classic\\Icons\\expand_arrow_open.tga")
+					else
+						buttonExpand:SetNormalTexture("Interface\\Addons\\Skillet-Classic\\Icons\\expand_arrow_closed.tga")
+						buttonExpand:SetHighlightTexture("Interface\\Addons\\Skillet-Classic\\Icons\\expand_arrow_closed.tga")
+					end
+					local name
+					if skill.subGroup.entries then
+						name = skill.name.." ("..#skill.subGroup.entries..")"
+					else
+						name = skill.name.." (0)"
+					end
+					local groupIndex = skill.subGroup.groupIndex
+					DA.DEBUG(2,"name= "..tostring(name)..", groupIndex= "..tostring(groupIndex))
+					buttonText:SetText(name)
+					button:SetID(skillIndex or 0)
+					buttonExpand.group = skill.subGroup
+					button.skill = skill
+					button:UnlockHighlight()
+					buttonExpand:Show()
+					local rankBarWidth = 0
+					if groupIndex then
+						local _, _, _, _, _, _,_,showProgressBar, currentRank, maxRank, startingRank  = GetTradeSkillInfo(groupIndex)
+						if ( showProgressBar ) then
+							skillRankBar:Show();
+							skillRankBar:SetMinMaxValues(startingRank,maxRank);
+							skillRankBar:SetValue(currentRank);
+							skillRankBar.currentRank = currentRank;
+							skillRankBar.maxRank = maxRank;
+							skillRankBar.Rank:SetText(currentRank.."/"..maxRank);
+							rankBarWidth = 60;
+						end
+					end
+					show_button(button, self.currentTrade, skillIndex, i)
+				end
+			else
+				local recipe = self:GetRecipe(skill.recipeID)
+				buttonExpand.group = nil
+				button.skill = skill
+				local _, difficulty
+				if self.isCraft then
+					_, _, difficulty = GetCraftInfo(skillIndex)
+				else
+					_, difficulty = GetTradeSkillInfo(skillIndex)
+				end
+				local skill_color = Skillet.skill_style_type[difficulty] or skill.color or skill.skillData.color or NORMAL_FONT_COLOR
+				buttonText:SetTextColor(skill_color.r, skill_color.g, skill_color.b, textAlpha)
+				countText:SetTextColor(skill_color.r, skill_color.g, skill_color.b, textAlpha)
+				buttonExpand:Hide()
+
+				if self.db.profile.display_required_level and recipe.itemID then
+					local level = self:GetLevelRequiredToUse(recipe.itemID)
+					if level and level > 1 then
+						local _, _, rarity = GetItemInfo(recipe.itemID)
+						local r, g, b = GetItemQualityColor(rarity)
+						if r and g and b then
+							levelText:SetTextColor(r, g, b)
+						end
+						levelText:SetText(level)
+					end
+				elseif self.db.profile.display_item_level and recipe.itemID then
+					local level = self:GetItemLevel(recipe.itemID)
+					if level and level > 1 then
+						levelText:SetText(level)
+					end
+				elseif self.db.profile.display_skill_index then
+					levelText:SetWidth(28)
+					levelText:SetText(tostring(skillIndex))
+				end
+
+				local text = (self:RecipeNamePrefix(skill, recipe) or "") .. (skill.name or "")
+				if recipe.reagentData and #recipe.reagentData > 0 then
+					local num, numrecursive, numwvendor, numwalts = get_craftable_counts(skill.skillData, recipe.numMade)
+					if (num > 0 and showBag) or (numrecursive > 0 and showCraft) or (numwvendor > 0 and showVendor) or (numwalts > 0 and showAlts) then
+						local c = 1
+						if showBag then
+							if num >= 1000 then num = "##" end
+							catstring[c] = CBAG..num
+							c = c + 1
+						end
+						if showCraft then
+							if numrecursive >= 1000 then numrecursive = "##" end
+							catstring[c] = CCRAFT..numrecursive
+							c = c + 1
+						end
+						if showVendor then
+							if numwvendor >= 1000 then numwvendor = "##" end
+							catstring[c] = CVENDOR..numwvendor
+							c = c + 1
+						end
+						if showAlts then
+							if numwalts >= 1000 then numwalts = "##" end
+							catstring[c] = CALTS..numwalts
+							c = c + 1
+						end
+						local count = ""
+						if c > 1 then
+							count = CGREY.."["
+							for b=1,c-1 do
+								count = count..catstring[b]
+								if b+1 < c then count = count..CGREY.."/" end
+							end
+							count = count..CGREY.."]|r"
+						end
+						countText:SetText(count)
+						countText:Show()
+					else
+						countText:Hide()
+					end
+				else
+					countText:Hide()
+				end
+
+				if showOwned and self.currentPlayer == UnitName("player") then
+					local numowned = (self.db.realm.auctionData[self.currentPlayer][recipe.itemID] or 0) + GetItemCount(recipe.itemID or 0,true)
+					if numowned > 0 then
+						if numowned >= 1000 then numowned = "##" end
+						local count = COWNED.."("..numowned..") "..(countText:GetText() or "")
+						countText:SetText(count)
+						countText:Show()
+					end
+				end
+
+				if skill_color.alttext == "+++" then
+					local _, _, _, _, _, numSkillUps  = GetTradeSkillInfo(skillIndex)
+					if numSkillUps and numSkillUps > 1 then
+						local count = "<+"..numSkillUps.."> "..(countText:GetText() or "")
+						countText:SetText(count)
+						countText:Show()
+					end
+				end
+
+				countText:SetWidth(math.max(countText:GetStringWidth(),SKILLET_COUNT_MIN_WIDTH))
+				button:SetID(skillIndex or 0)
+
+				if self.db.profile.enhanced_recipe_display and skill_color.alttext then
+					text = text .. skill_color.alttext;
+				end
+
+				suffixText:SetText(self:RecipeNameSuffix(skill, recipe) or "")
+				suffixText:Show()
+				buttonText:SetText(text)
+				buttonText:SetWordWrap(false)
+				buttonText:SetWidth(max_text_width - countText:GetWidth())
+
+				if not self.dragEngaged and self.selectedSkill and self.selectedSkill == skillIndex then
+					SkilletHighlightFrame:SetPoint("TOPLEFT", "SkilletScrollButton"..i, "TOPLEFT", 0, 0)
+					SkilletHighlightFrame:SetWidth(button:GetWidth())
+					SkilletHighlightFrame:SetFrameLevel(button:GetFrameLevel())
+					SkilletHighlight:SetColorTexture(0.7, 0.7, 0.7, 0.4)
+					self:UpdateDetailsWindow(self.selectedSkill)
+					SkilletHighlightFrame:Show()
+					button:LockHighlight()
+				else
+					button:UnlockHighlight()
+				end
+				show_button(button, self.currentTrade, skillIndex, i)
+			end
+		else
+			hide_button(button, self.currentTrade, skillIndex, i)
+			button:UnlockHighlight()
+		end
+	end
+
+	-- Hide unused buttons
+	for i = button_count+1, num_recipe_buttons, 1 do
+		local button, buttonDrag = get_recipe_button(i)
+		hide_button(button, self.currentTrade, 0, i)
+	end
+
+	if self.visibleSkillButtons > 0 then
+		local button = get_recipe_button(self.visibleSkillButtons)
+		SkilletFrameEmptySpace:SetPoint("TOPLEFT",button,"BOTTOMLEFT")
+	else
+		SkilletFrameEmptySpace:SetPoint("TOPLEFT",SkilletSkillListParent,"TOPLEFT")
+	end
+	SkilletFrameEmptySpace:SetPoint("BOTTOMRIGHT",SkilletSkillListParent,"BOTTOMRIGHT")
+	DA.DEBUG(3,"UpdateSkillButtons Complete")
+end
+
+--
 -- Updates the trade skill window whenever anything has changed,
 -- number of skills, skill type, skill level, etc
 --
@@ -1138,310 +1426,9 @@ function Skillet:UpdateTradeSkillWindow()
 	button_count = math.floor(button_count)
 	self.button_count = button_count
 --
--- Update the scroll frame
+-- Update skill buttons (use lightweight function for better performance)
 --
-	FauxScrollFrame_Update(SkilletSkillList,				-- frame
-							numTradeSkills,					-- num items
-							button_count,					-- num to display
-							SKILLET_TRADE_SKILL_HEIGHT)		-- value step (item height)
---
--- Where in the list of skill to start counting.
---
-	local skillOffset = FauxScrollFrame_GetOffset(SkilletSkillList);
---
--- Remove any selected highlight, it will be added back as needed
---
-	SkilletHighlightFrame:Hide();
-	local nilFound = false
-	width = SkilletSkillListParent:GetWidth() - 10
-	if SkilletSkillList:IsVisible() then
---
--- adjust for the width of the scroll bar, if it is visible.
---
-		width = width - 20
-	end
-	local text, color, skillIndex
-	local max_text_width = width
-	local showOwned = self:GetTradeSkillOption("filterInventory-owned") -- count from Altoholic
-	local showBag = self:GetTradeSkillOption("filterInventory-bag")
-	local showCraft = self:GetTradeSkillOption("filterInventory-crafted")
-	local showVendor = self:GetTradeSkillOption("filterInventory-vendor")
-	local showAlts = self:GetTradeSkillOption("filterInventory-alts")
-	local catstring = {}
-	SkilletFrameEmptySpace.skill.subGroup = self:RecipeGroupFind(self.currentPlayer,self.currentTrade,self.currentGroupLabel,self.currentGroup)
-	--DA.DEBUG(0,"GroupLabel= "..tostring(self.currentGroupLabel)..", Group= "..tostring(self.currentGroup))
-	self.visibleSkillButtons = math.min(numTradeSkills - skillOffset, button_count)
---
--- Iterate through all the buttons that make up the scroll window
--- and fill them in with data or hide them, as necessary
---
-	local sortedSkillList = self.data.sortedSkillList[skillListKey]
-	--DA.DEBUG(0,"Start for loop, button_count= "..tostring(button_count))
-	for i=1, button_count, 1 do
-		local rawSkillIndex = i + skillOffset
-		local button, buttonDrag = get_recipe_button(i)
-		button.rawIndex = rawSkillIndex
-		button:SetWidth(width)
-		if rawSkillIndex <= numTradeSkills then
-			local skill = sortedSkillList[rawSkillIndex]
-			--DA.DEBUG(2,"rawSkillIndex= "..tostring(rawSkillIndex)..", name= "..tostring(skill.name))
-			--DA.DEBUG(3,"skill= "..DA.DUMP1(skill,1))
-			local skillIndex = skill.skillIndex
-			local buttonText = _G[button:GetName() .. "Name"]
-			local levelText = _G[button:GetName() .. "Level"]
-			local countText = _G[button:GetName() .. "Counts"]
-			local suffixText = _G[button:GetName() .. "Suffix"]
-			local buttonExpand = _G[button:GetName() .. "Expand"]
-			local skillRankBar = _G[button:GetName() .. "SubSkillRankBar"]
-			buttonText:SetText("")
-			levelText:SetText("")
-			countText:SetText("")
-			countText:Hide()
-			countText:SetWidth(10)
-			suffixText:SetText("")
-			suffixText:Hide()
-			skillRankBar:Hide()
-			if self.db.profile.display_required_level or self.db.profile.display_item_level then
-				levelText:SetWidth(math.max(skill.depth*8+20,28))
-			else
-				levelText:SetWidth(skill.depth*8)
-			end
-			local textAlpha = 1
-			if self.dragEngaged then
-				buttonDrag:SetWidth(width)
-				button.highlight:Hide()
-				if Skillet.mouseOver then
-					if Skillet.mouseOver.skill.subGroup then
-						if button == Skillet.mouseOver then
-							button.highlight:Show()
-						end
-					elseif skill.subGroup == Skillet.mouseOver.skill.parent then
-						button.highlight:Show()
-					end
-				end
-				textAlpha = .75
-				local dx = self.selectedTextOffsetXY[1] / uiScale
-				local dy = self.selectedTextOffsetXY[2] / uiScale
-				buttonDrag:SetPoint("TOPLEFT", button, "TOPLEFT", buttonDrag.skill.depth*8-8+dx, dy)
-			else
-				if skill.selected then
-					button.highlight:Show()
-				else
-					button.highlight:Hide()
-				end
-			end
-			--DA.DEBUG( if self.currentGroupLabel ~= "Blizzard" then DA.DEBUG(0,"skill.subGroup = "..tostring(skill.subGroup)) end
-			if skill.subGroup then
-				--DA.DEBUG(2,"skill.subGroup= "..DA.DUMP(skill.subGroup,1))
-				if SkillButtonNameEdit.originalButton ~= buttonText then
-					buttonText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, textAlpha)
-					countText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, textAlpha)
-					local expanded = skill.subGroup.expanded
-					if expanded then
-						buttonExpand:SetNormalTexture("Interface\\Addons\\Skillet-Classic\\Icons\\expand_arrow_open.tga")
-						buttonExpand:SetHighlightTexture("Interface\\Addons\\Skillet-Classic\\Icons\\expand_arrow_open.tga")
-					else
-						buttonExpand:SetNormalTexture("Interface\\Addons\\Skillet-Classic\\Icons\\expand_arrow_closed.tga")
-						buttonExpand:SetHighlightTexture("Interface\\Addons\\Skillet-Classic\\Icons\\expand_arrow_closed.tga")
-					end
-					local name
-					if skill.subGroup.entries then
-						name = skill.name.." ("..#skill.subGroup.entries..")"
-					else
-						name = skill.name.." (0)"
-					end
-					local groupIndex = skill.subGroup.groupIndex
-					DA.DEBUG(2,"name= "..tostring(name)..", groupIndex= "..tostring(groupIndex))
-					buttonText:SetText(name)      -- THIS IS A HEADER SO DON'T TRY TO USE THE RECIPE ID!
-					button:SetID(skillIndex or 0)
-					buttonExpand.group = skill.subGroup
-					button.skill = skill
-					button:UnlockHighlight() -- headers never get highlighted
-					buttonExpand:Show()
-					local rankBarWidth = 0
-					if groupIndex then
-						local _, _, _, _, _, _,_,showProgressBar, currentRank, maxRank, startingRank  = GetTradeSkillInfo(groupIndex)
-						if ( showProgressBar ) then
-							skillRankBar:Show();
-							skillRankBar:SetMinMaxValues(startingRank,maxRank);
-							skillRankBar:SetValue(currentRank);
-							skillRankBar.currentRank = currentRank;
-							skillRankBar.maxRank = maxRank;
-							skillRankBar.Rank:SetText(currentRank.."/"..maxRank);
-							rankBarWidth = 60;
-						end
-					end
-					local button_width = button:GetTextWidth()
-					show_button(button, self.currentTrade, skillIndex, i)
-				end
-			else
-				local recipe = self:GetRecipe(skill.recipeID)
-				buttonExpand.group = nil
-				button.skill = skill
---				local skill_color = skill.color or skill.skillData.color or NORMAL_FONT_COLOR
-				local _, difficulty 
-				if self.isCraft then
-					_, _, difficulty = GetCraftInfo(skillIndex)
-				else
-					_, difficulty = GetTradeSkillInfo(skillIndex)
-				end
-				local skill_color = Skillet.skill_style_type[difficulty] or skill.color or skill.skillData.color or NORMAL_FONT_COLOR
-				buttonText:SetTextColor(skill_color.r, skill_color.g, skill_color.b, textAlpha)
-				countText:SetTextColor(skill_color.r, skill_color.g, skill_color.b, textAlpha)
-				buttonExpand:Hide()
---
--- if the item has a minimum level requirement, then print that here
---
-				if self.db.profile.display_required_level and recipe.itemID then
-					local level = self:GetLevelRequiredToUse(recipe.itemID)
-					if level and level > 1 then
-						local _, _, rarity = GetItemInfo(recipe.itemID)
-						local r, g, b = GetItemQualityColor(rarity)
-						if r and g and b then
-							levelText:SetTextColor(r, g, b)
-						end
-						levelText:SetText(level)
-					end
-				elseif self.db.profile.display_item_level and recipe.itemID then
-					local level = self:GetItemLevel(recipe.itemID)
-					if level and level > 1 then
-						levelText:SetText(level)
-					end
-				elseif self.db.profile.display_skill_index then
-					levelText:SetWidth(28)
-					levelText:SetText(tostring(skillIndex))
-				end
-				text = (self:RecipeNamePrefix(skill, recipe) or "") .. (skill.name or "")
-				if recipe.reagentData and #recipe.reagentData > 0 then
-					local num, numrecursive, numwvendor, numwalts = get_craftable_counts(skill.skillData, recipe.numMade)
-					if (num > 0 and showBag) or (numrecursive > 0 and showCraft) or (numwvendor > 0 and showVendor) or (numwalts > 0 and showAlts) then
-						local c = 1
-						if showBag then
-							if num >= 1000 then
-								num = "##"
-							end
-							catstring[c] = CBAG..num
-							c = c + 1
-						end
-						if showCraft then
-							if numrecursive >= 1000 then
-								numrecursive = "##"
-							end
-							catstring[c] = CCRAFT..numrecursive
-							c = c + 1
-						end
-						if showVendor then
-							if numwvendor >= 1000 then
-								numwvendor = "##"
-							end
-							catstring[c] = CVENDOR..numwvendor
-							c = c + 1
-						end
-						if showAlts then
-							if numwalts >= 1000 then
-								numwalts = "##"
-							end
-							catstring[c] = CALTS..numwalts
-							c = c + 1
-						end
-						local count = ""
-						if c > 1 then
-							count = CGREY.."["
-							for b=1,c-1 do
-								count = count..catstring[b]
-								if b+1 < c then
-									count = count..CGREY.."/"
-								end
-							end
-							count = count..CGREY.."]|r"
-						end
-						countText:SetText(count)
-						countText:Show()
-					else
-						countText:Hide()
-					end
-				else
-					countText:Hide()
-				end
---
--- show the count of the item currently owned that the recipe will produce
---
-				if showOwned and self.currentPlayer == UnitName("player") then
-					local numowned = (self.db.realm.auctionData[self.currentPlayer][recipe.itemID] or 0) + GetItemCount(recipe.itemID or 0,true)
-					if numowned > 0 then
-						if numowned >= 1000 then
-							numowned = "##"
-						end
-						local count = COWNED.."("..numowned..") "..(countText:GetText() or "")
-						countText:SetText(count)
-						countText:Show()
-					end
-				end
-				if skill_color.alttext == "+++" then
-					local _, _, _, _, _, numSkillUps  = GetTradeSkillInfo(skillIndex)
-					if numSkillUps and numSkillUps > 1 then
-						local count = "<+"..numSkillUps.."> "..(countText:GetText() or "")
-						countText:SetText(count)
-						countText:Show()
-					end
-				end
-				countText:SetWidth(math.max(countText:GetStringWidth(),SKILLET_COUNT_MIN_WIDTH)) -- make end of buttonText have a fixed location
-				button:SetID(skillIndex or 0)
---
--- If enhanced recipe display is enabled, show the difficulty as text,
--- rather than as a colour. This should help used that have problems
--- distinguishing between the difficulty colours we use.
---
-				if self.db.profile.enhanced_recipe_display and skill_color.alttext then
-					text = text .. skill_color.alttext;
-				end
-				suffixText:SetText(self:RecipeNameSuffix(skill, recipe) or "")
-				suffixText:Show()
-				buttonText:SetText(text)
-				buttonText:SetWordWrap(false)
-				buttonText:SetWidth(max_text_width - countText:GetWidth())
-				if not self.dragEngaged and self.selectedSkill and self.selectedSkill == skillIndex then
-					SkilletHighlightFrame:SetPoint("TOPLEFT", "SkilletScrollButton"..i, "TOPLEFT", 0, 0)
-					SkilletHighlightFrame:SetWidth(button:GetWidth())
-					SkilletHighlightFrame:SetFrameLevel(button:GetFrameLevel())
-					if color then
-						SkilletHighlight:SetColorTexture(color.r, color.g, color.b, 0.4)
-					else
-						SkilletHighlight:SetColorTexture(0.7, 0.7, 0.7, 0.4)
-					end
---
--- And update the details for this skill, just in case something
--- has changed (mats consumed, etc)
---
-					self:UpdateDetailsWindow(self.selectedSkill)
-					SkilletHighlightFrame:Show()
-					button:LockHighlight()
-				else
-					-- not selected
---					button:SetBackdropColor(0.8, 0.2, 0.2)
-					button:UnlockHighlight()
-				end
-				show_button(button, self.currentTrade, skillIndex, i)
-			end
-		else -- rawSkillIndex > numTradeSkills 
-			hide_button(button, self.currentTrade, skillIndex, i)
-			button:UnlockHighlight()
-		end
-	end -- for
---
--- Hide any of the buttons that we created but don't need right now
---
-	for i = button_count+1, num_recipe_buttons, 1 do
-		local button, buttonDrag = get_recipe_button(i)
-		hide_button(button, self.currentTrade, 0, i)
-	end
-	if self.visibleSkillButtons > 0 then
-		local button = get_recipe_button(self.visibleSkillButtons)
-		SkilletFrameEmptySpace:SetPoint("TOPLEFT",button,"BOTTOMLEFT")
-	else
-		SkilletFrameEmptySpace:SetPoint("TOPLEFT",SkilletSkillListParent,"TOPLEFT")
-	end
-	SkilletFrameEmptySpace:SetPoint("BOTTOMRIGHT",SkilletSkillListParent,"BOTTOMRIGHT")
+	self:UpdateSkillButtons()
 	DA.DEBUG(3,"UpdateTradeSkillWindow Complete")
 end
 
