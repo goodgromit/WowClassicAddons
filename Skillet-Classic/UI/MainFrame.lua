@@ -1274,7 +1274,8 @@ function Skillet:UpdateSkillButtons()
 					SkilletHighlightFrame:SetWidth(button:GetWidth())
 					SkilletHighlightFrame:SetFrameLevel(button:GetFrameLevel())
 					SkilletHighlight:SetColorTexture(0.7, 0.7, 0.7, 0.4)
-					self:UpdateDetailsWindow(self.selectedSkill)
+					-- Don't call UpdateDetailsWindow here - it's already displayed!
+					-- This was causing unnecessary updates during scroll
 					SkilletHighlightFrame:Show()
 					button:LockHighlight()
 				else
@@ -1872,6 +1873,26 @@ end
 -- Updates the details window with information about the currently selected skill
 --
 local lastUpdateSpellID = nil
+
+-- Cache for reagent button elements to avoid repeated _G lookups and string concatenation
+local reagentButtonCache = {}
+local function get_reagent_button_elements(i)
+	if not reagentButtonCache[i] then
+		local button = _G["SkilletReagent"..i]
+		if button then
+			local name = button:GetName()
+			reagentButtonCache[i] = {
+				button = button,
+				text = _G[name .. "Text"],
+				icon = _G[name .. "Icon"],
+				count = _G[name .. "Count"],
+				needed = _G[name .. "Needed"]
+			}
+		end
+	end
+	return reagentButtonCache[i]
+end
+
 function Skillet:UpdateDetailsWindow(skillIndex)
 	--DA.DEBUG(0,"UpdateDetailsWindow("..tostring(skillIndex)..")")
 	if not skillIndex or skillIndex < 0 then
@@ -1889,6 +1910,15 @@ function Skillet:UpdateDetailsWindow(skillIndex)
 		Skillet:HideDetailWindow()
 		return
 	end
+
+	-- Check if same recipe - if so, skip update (already displayed)
+	local sameRecipe = (lastUpdateSpellID == skill.id)
+	if sameRecipe then
+		--DA.DEBUG(0,"UpdateDetailsWindow: Same recipe, skip update (already displayed)")
+		return
+	end
+
+	--DA.DEBUG(0,"UpdateDetailsWindow: Full update (new recipe)")
 	lastUpdateSpellID = skill.id
 	local recipe = Skillet.unknownRecipe
 	if skill then
@@ -2027,13 +2057,21 @@ function Skillet:UpdateDetailsWindow(skillIndex)
 	SkilletReagentLabel:Show();
 	local width = SkilletReagentParent:GetWidth()
 	local lastReagentButton = _G["SkilletReagent1"]
+
+	-- Update reagent information (with cached button elements)
+	--DA.DEBUG(0,"UpdateDetailsWindow: Updating reagent info")
+
 	for i=1, SKILLET_NUM_REAGENT_BUTTONS, 1 do
-		local button = _G["SkilletReagent"..i]
-		local   text = _G[button:GetName() .. "Text"]
-		local   icon = _G[button:GetName() .. "Icon"]
-		local  count = _G[button:GetName() .. "Count"]
-		local needed = _G[button:GetName() .. "Needed"]
+		local elements = get_reagent_button_elements(i)
+		if not elements then break end
+
+		local button = elements.button
+		local text = elements.text
+		local icon = elements.icon
+		local count = elements.count
+		local needed = elements.needed
 		local reagent = recipe.reagentData[i]
+
 		if reagent then
 			local reagentName
 			if reagent.id then
@@ -2043,8 +2081,8 @@ function Skillet:UpdateDetailsWindow(skillIndex)
 			end
 			local num, craftable = self:GetInventory(self.currentPlayer, reagent.id)
 			local bank = GetItemCount(reagent.id,true) - num
-			local count_text
-			count_text = string.format("[%d/%d/%d]", num, bank, craftable)
+			local count_text = string.format("[%d/%d/%d]", num, bank, craftable)
+
 			if num < reagent.numNeeded then
 				-- grey it out if we don't have it
 				count:SetText(GRAY_FONT_COLOR_CODE .. count_text .. FONT_COLOR_CODE_CLOSE)
@@ -2055,9 +2093,7 @@ function Skillet:UpdateDetailsWindow(skillIndex)
 					needed:SetTextColor(1,0,0)
 				end
 			else
---
--- Ungrey it
---
+				-- Ungrey it
 				count:SetText(count_text)
 				text:SetText(reagentName)
 				needed:SetTextColor(1,1,1)
@@ -2069,10 +2105,7 @@ function Skillet:UpdateDetailsWindow(skillIndex)
 			button:Show()
 			lastReagentButton = button
 		else
---
--- Out of necessary reagents, don't need to show the button,
--- or any of the text.
---
+			-- Out of necessary reagents, don't need to show the button
 			button:Hide()
 		end
 	end
@@ -2637,21 +2670,35 @@ end
 --
 function Skillet:SkillButton_OnClick(button)
 	local mouse = GetMouseButtonClicked()
-	--DA.DEBUG(3,"SkillButton_OnClick("..tostring(button).."), "..tostring(mouse))
+	--DA.DEBUG(0,"SkillButton_OnClick("..tostring(button:GetID())..")")
 	if (mouse == "LeftButton") then
 		Skillet:QueueManagementToggle(true)
+		local needFullUpdate = false
 		if not button.skill.mainGroup then
 			if IsShiftKeyDown() and self.skillMainSelection then
 				self:SkillButton_ClearSelections()
 				self:SkillButton_SetSelections(self.skillMainSelection, button.rawIndex)
+				needFullUpdate = true
 			else
 				if not IsControlKeyDown() then
 					if not button.skill.subGroup then
+						-- Check if clicking the same recipe
+						local clickedSkillIndex = button:GetID()
+						local isSameRecipe = (self.selectedSkill == clickedSkillIndex and button.skill.selected)
+
+						-- If same recipe, do absolutely nothing (complete no-op for max performance)
+						if isSameRecipe then
+							--DA.DEBUG(0,"SkillButton_OnClick: Same recipe clicked, NOOP (cached)")
+							return  -- Skip everything - already displayed
+						end
+
+						-- Different recipe - do full update
 						if not button.skill.selected then
 							self:SkillButton_ClearSelections()
 						end
-						self:SetSelectedSkill(button:GetID())
+						self:SetSelectedSkill(clickedSkillIndex)
 						button.skill.selected = true
+						needFullUpdate = true
 					else
 						if button.skill.selected and not self:RecipeGroupIsLocked() then
 							self:SkillButton_NameEditEnable(button)
@@ -2660,15 +2707,22 @@ function Skillet:SkillButton_OnClick(button)
 							self:SkillButton_ClearSelections()
 							self.selectedSkill = nil
 							button.skill.selected = true
+							needFullUpdate = true
 						end
 					end
 					self.skillMainSelection = button.rawIndex
 				else
 					button.skill.selected = not button.skill.selected
+					needFullUpdate = true
 				end
 			end
+		else
+			needFullUpdate = true
 		end
-		self:UpdateTradeSkillWindow()
+
+		if needFullUpdate then
+			self:UpdateTradeSkillWindow()
+		end
 	elseif (mouse == "RightButton") then
 		self:SkilletSkillMenu_Show(button)
 	end
